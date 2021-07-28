@@ -8,6 +8,11 @@ import history from "../history"
 import ReactDOM from 'react-dom'
 
 
+
+
+var inputUsername;
+var inputPassword;
+
 function SubmitLogin() {
     const LoginContext = React.createContext({
         fetchLogin: () => {}
@@ -68,18 +73,29 @@ export default function Login() {
     useEffect(() => {
         fetchLogin();
     }, []);
+
+
+
+    const setUsername = event => {
+        inputUsername = event.target.value
+    };
+
+    const setPassword = event => {
+        inputPassword = event.target.value
+    };
+
     return (
         <div>
             <h3>Sign In</h3>
             <p>
             <div className="form-group">
                 <label>Username</label><br />
-                <TextField id="username" size="small" label="Enter username" variant="outlined" />
+                <TextField id="username" size="small" label="Enter username" variant="outlined" onChange={setUsername} />
             </div>
 
             <div className="form-group">
                 <label>Password</label> <br />
-                <TextField id="password" size="small" label="Enter password" variant="outlined" />
+                <TextField id="password" size="small" label="Enter password" variant="outlined" onChange={setPassword} />
             </div>
 
             <SubmitLogin/>
