@@ -8,7 +8,7 @@ import '../../node_modules/bootstrap/dist/css/bootstrap.min.css';
 export default function Search() {
     const [search, setSearch] = useState([])
     const fetchSearch = async () => {
-        const response = await fetch("http://localhost:8000/next")
+        const response = await fetch("http://localhost:8000/search")
         const search = await response.json()
         setSearch(search.data)
     }
@@ -20,7 +20,7 @@ export default function Search() {
             <p>
                 <h3>Search for a model</h3>
                 <label for="model">Model:</label><br/>
-                <TextField id="search" variant="outlined"/>
+                <TextField id="search" size="small" variant="outlined"/>
             </p>
         </div>
     

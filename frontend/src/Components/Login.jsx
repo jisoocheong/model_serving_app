@@ -74,12 +74,12 @@ export default function Login() {
             <p>
             <div className="form-group">
                 <label>Username</label><br />
-                <TextField id="username" label="Enter username" variant="outlined" />
+                <TextField id="username" size="small" label="Enter username" variant="outlined" />
             </div>
 
             <div className="form-group">
                 <label>Password</label> <br />
-                <TextField id="password" label="Enter password" variant="outlined" />
+                <TextField id="password" size="small" label="Enter password" variant="outlined" />
             </div>
 
             <SubmitLogin/>
