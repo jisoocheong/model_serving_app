@@ -1,6 +1,13 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.model_serving_db import user_table
+from pydantic import BaseModel
+
+
+class LoginBody(BaseModel):
+    username: str
+    password: str
+
 
 app = FastAPI()
 
@@ -30,10 +37,9 @@ async def read_root():
 
 @app.post("/")
 @app.post("/index")
-async def login(user:dict):
+async def login(body:LoginBody):
     #add logic for checking user input
-    print(user)
-    login_status = user_table.check_valid_login("jisoo", "some password")
+    login_status = user_table.check_valid_login(body.username, body.password)
     
     return {"output": login_status}
 
