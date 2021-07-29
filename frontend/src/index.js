@@ -1,7 +1,6 @@
 import React from "react";
 import { render } from 'react-dom';
-//import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
-
+import CreateAccount from "./Components/CreateAccount"
 import Login from "./Components/Login"
 import Search from "./Components/Search"
 
@@ -10,6 +9,7 @@ function App() {
     return (
         <div>
             <Login />
+            <CreateAccount />
         </div>
             )
 }

@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from "react";
 import { render } from 'react-dom';
-import { BrowserRouter as Router, Route, Switch, Link } from 'react-router-dom';
-import { Button, TextField } from '@material-ui/core';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { Button, TextField, Link } from '@material-ui/core';
 import Search from "./Search"
 import history from "../history"
 import ReactDOM from 'react-dom'
@@ -58,8 +58,19 @@ function SubmitLogin() {
     return (
             <Button variant="contained" color="primary" onClick={handleSubmit}> Submit</Button>
     )
-
 }
+
+
+
+function SignUp(){
+    return (
+        <Link onClick={}> 
+        Sign Up
+        </Link>
+    )
+}
+
+
 export default function Login() {
     const [login, setLogin] = useState([]);
     const fetchLogin = async () => {
@@ -94,6 +105,7 @@ export default function Login() {
                 <TextField id="password" type="password" size="small" label="Enter password" variant="outlined" onChange={setPassword} />
             </div>
             <SubmitLogin/>
+            <SignUp/>
         </div>
 
     )

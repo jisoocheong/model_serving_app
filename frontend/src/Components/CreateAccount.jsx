@@ -2,7 +2,8 @@ import React, {useState, useEffect} from "react";
 import { render } from 'react-dom';
 import { Redirect } from "react-router-dom";
 import { TextField, Button } from '@material-ui/core';
-    
+import history from "../history"
+
 
 var inputUsername = "";
 var inputFirstPassword = "";
@@ -16,7 +17,7 @@ function NewUser(){
         // fill in request
 
 
-        }).then(response = > {
+        }).then(response => {
             return response.json();
         }).then(data => {
             // fill in with valid new user info
