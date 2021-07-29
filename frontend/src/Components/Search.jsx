@@ -17,11 +17,9 @@ export default function Search() {
     }, [])
     return (
         <div>
-            <p>
                 <h3>Search for a model</h3>
-                <label for="model">Model:</label><br/>
+                <label htmlFor="model">Model:</label><br/>
                 <TextField id="search" size="small" variant="outlined"/>
-            </p>
         </div>
     
     );

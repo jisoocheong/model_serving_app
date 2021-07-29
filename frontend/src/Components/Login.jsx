@@ -7,8 +7,8 @@ import history from "../history"
 import ReactDOM from 'react-dom'
 
 
-var inputUsername;
-var inputPassword;
+var inputUsername = "";
+var inputPassword = "";
 
 function SubmitLogin() {
     const LoginContext = React.createContext({
@@ -84,7 +84,6 @@ export default function Login() {
     return (
         <div>
             <h3>Sign In</h3>
-            <p>
             <div className="form-group">
                 <label>Username</label><br />
                 <TextField id="username" size="small" label="Enter username" variant="outlined" onChange={setUsername} />
@@ -95,7 +94,6 @@ export default function Login() {
                 <TextField id="password" type="password" size="small" label="Enter password" variant="outlined" onChange={setPassword} />
             </div>
             <SubmitLogin/>
-            </p>
         </div>
 
     )
