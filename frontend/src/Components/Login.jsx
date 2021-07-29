@@ -1,13 +1,10 @@
 import React, {useState, useEffect} from "react";
 import { render } from 'react-dom';
 import { BrowserRouter as Router, Route, Switch, Link } from 'react-router-dom';
-//import '../../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import { Button, TextField } from '@material-ui/core';
 import Search from "./Search"
 import history from "../history"
 import ReactDOM from 'react-dom'
-
-
 
 
 var inputUsername;
@@ -26,7 +23,7 @@ function SubmitLogin() {
             "headers": {
                 "Content-Type": "application/json"
             },
-            "body": "{}"
+            "body": JSON.stringify({"username" : inputUsername, "password" : inputPassword})
         }).then(response => {
             // This gets the response from the fetch
             console.log(response);
@@ -95,9 +92,8 @@ export default function Login() {
 
             <div className="form-group">
                 <label>Password</label> <br />
-                <TextField id="password" size="small" label="Enter password" variant="outlined" onChange={setPassword} />
+                <TextField id="password" type="password" size="small" label="Enter password" variant="outlined" onChange={setPassword} />
             </div>
-
             <SubmitLogin/>
             </p>
         </div>
