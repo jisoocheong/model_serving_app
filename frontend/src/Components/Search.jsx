@@ -2,7 +2,6 @@ import React, {useState, useEffect} from "react";
 import { render } from 'react-dom';
 import { Redirect } from "react-router-dom";
 import { TextField } from '@material-ui/core';
-import '../../node_modules/bootstrap/dist/css/bootstrap.min.css';
     
 
 export default function Search() {

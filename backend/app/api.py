@@ -40,7 +40,7 @@ async def read_root():
 async def login(body:LoginBody):
     #add logic for checking user input
     login_status = user_table.check_valid_login(body.username, body.password)
-    
+    print(body)    
     return {"output": login_status}
 
 
