@@ -26,15 +26,11 @@ function NewUser(){
                 history.push()
             }
         })
-
-
-
     }
 
 
     return (
         <Button variant="contained" color="primary" onClick={handleSubmit}>Sign Up</Button>
-    
     )
 }
 
@@ -51,9 +47,9 @@ export default function CreateAccount() {
         fetchSearch()
     }, [])
 
-
-
-
+    const setEmail = event => {
+        inputEmail = event.target.value
+    };
     const setUsername = event => {
         inputUsername = event.target.value
     };
@@ -68,23 +64,26 @@ export default function CreateAccount() {
     return (
         <div>
             <h3>Sign Up</h3>
-           <div className="form-group">
+            <div className="form-group">
+                <label>Email</label><br />
+                <TextField id="email" size="small" label="Enter email" variant="outlined" onChange={setEmail} />
+            </div>
+
+          <div className="form-group">
                 <label>Username</label><br />
                 <TextField id="username" size="small" label="Enter username" variant="outlined" onChange={setUsername} />
             </div>
 
             <div className="form-group">
                 <label>Password</label> <br />
-                <TextField id="password" type="password" size="small" label="Enter password" variant="outlined" onChange={setFirstPassword} />
+                <TextField id="firstpassword" type="password" size="small" label="Enter password" variant="outlined" onChange={setFirstPassword} />
             </div>
             <div className="form-group">
                 <label>Reenter Password</label> <br />
-                <TextField id="password" type="password" size="small" label="Enter password" variant="outlined" onChange={setSecondPassword} />
+                <TextField id="secondpassword" type="password" size="small" label="Enter password" variant="outlined" onChange={setSecondPassword} />
             </div>
             <NewUser/>
         </div>
 
     )
-
-
 };

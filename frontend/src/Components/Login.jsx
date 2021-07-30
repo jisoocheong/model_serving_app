@@ -11,6 +11,7 @@ import ReactDOM from 'react-dom'
 var inputUsername = "";
 var inputPassword = "";
 
+
 function SubmitLogin() {
     const LoginContext = React.createContext({
         fetchLogin: () => {}
@@ -47,14 +48,10 @@ function SubmitLogin() {
             );
             ReactDOM.render(elem, document.getElementById("root"))
         }
-
-
         }).catch(err => {
             console.error(err);
         });
-
     }
-    
 
     return (
             <Button variant="contained" color="primary" onClick={handleSubmit}> Submit</Button>
@@ -64,7 +61,6 @@ function SubmitLogin() {
 
 
 function SignUp(){
-
     const handleSignUp = () => {
         const responseResult = fetch("http://127.0.0.1:8000/create").then(
             response => {
