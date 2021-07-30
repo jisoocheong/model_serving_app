@@ -1,7 +1,8 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from app.model_serving_db import user_table
 from pydantic import BaseModel
+from fastapi.security import OAuth2PasswordBearer
 
 
 class LoginBody(BaseModel):
@@ -10,6 +11,8 @@ class LoginBody(BaseModel):
 
 
 app = FastAPI()
+
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 origins = [
         "http://localhost:3000",
@@ -24,6 +27,10 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
+@app.get("/items/")
+async def read_items(token: str = Depends(oauth2_scheme)):
+    return {"token": token}
        
 
 @app.get("/")
@@ -47,6 +54,23 @@ async def login(body:LoginBody):
 @app.get("/search")
 async def search():
     return {"data": "This should show a page with a search bar"}
+
+
+
+@app.get("/create")
+async def get_create():
+    return {"data" : "A page for a new user to be born"}
+
+
+
+@app.post("/create")
+async def post_create():
+    return {"data": "new user is created"}
+
+
+
+
+
 
 
 

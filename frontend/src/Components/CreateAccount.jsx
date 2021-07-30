@@ -5,6 +5,7 @@ import { TextField, Button } from '@material-ui/core';
 import history from "../history"
 
 
+var inputEmail = "";
 var inputUsername = "";
 var inputFirstPassword = "";
 var inputSecondPassword = "";
