@@ -3,6 +3,7 @@ import { render } from 'react-dom';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { Button, TextField, Link } from '@material-ui/core';
 import Search from "./Search"
+import CreateUser from "./CreateAccount"
 import history from "../history"
 import ReactDOM from 'react-dom'
 
@@ -63,8 +64,31 @@ function SubmitLogin() {
 
 
 function SignUp(){
+
+    const handleSignUp = () => {
+        const responseResult = fetch("http://127.0.0.1:8000/create").then(
+            response => {
+                history.push("/create")
+                const elem = (
+                <Router>
+                    <div>
+                        <Route path="/create/">
+                            <CreateUser />
+                        </Route>
+                    </div>
+                </Router>
+            );
+            ReactDOM.render(elem, document.getElementById("root"))
+
+       
+            
+            }).catch(err => {
+            console.error(err);
+        });
+    }
+    
     return (
-        <Link onClick={}> 
+        <Link onClick={handleSignUp}> 
         Sign Up
         </Link>
     )
