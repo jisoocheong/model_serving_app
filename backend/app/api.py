@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.model_serving_db import user_table
 from pydantic import BaseModel
 from fastapi.security import OAuth2PasswordBearer
+import jwt
 
 
 class LoginBody(BaseModel):
@@ -47,8 +48,13 @@ async def read_root():
 async def login(body:LoginBody):
     #add logic for checking user input
     login_status = user_table.check_valid_login(body.username, body.password)
+    if login_status:
+        token = jwt.encode({"public_id": body.username}, app.config["SECRET_KEY"], "HS256")
+        return jsonify({"token":token})
+
     print(body)    
-    return {"output": login_status}
+    return make_response("could not verify", 401, {"Authentication", "login required"})
+#    return {"output": login_status}
 
 
 @app.get("/search")
