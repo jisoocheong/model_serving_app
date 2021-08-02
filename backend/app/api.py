@@ -75,9 +75,10 @@ async def get_create():
 
 @app.post("/create")
 async def post_create(body: NewUserBody):
+    added_new_user = True
     if body.first_password == body.second_password:
-        user_table.add_user(body.username, body.email, body.first_password)
-    return {"data": "new user is created"}
+        added_new_user = user_table.add_user(body.username, body.email, body.first_password)
+    return {"result": added_new_user} 
 
 
 
