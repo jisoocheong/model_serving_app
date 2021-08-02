@@ -4,6 +4,8 @@ from app.model_serving_db import user_table
 from pydantic import BaseModel
 from fastapi.security import OAuth2PasswordBearer
 import jwt
+from dotenv import load_dotenv
+import os
 
 
 class LoginBody(BaseModel):
@@ -14,6 +16,9 @@ class LoginBody(BaseModel):
 app = FastAPI()
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+
+
+load_dotenv() # read the env var from .env file
 
 origins = [
         "http://localhost:3000",
@@ -49,12 +54,15 @@ async def login(body:LoginBody):
     #add logic for checking user input
     login_status = user_table.check_valid_login(body.username, body.password)
     if login_status:
-        token = jwt.encode({"public_id": body.username}, app.config["SECRET_KEY"], "HS256")
-        return jsonify({"token":token})
+        print("login status is true")
+        print(os.environ.get("secret"))
+        secret = os.environ.get("secret")
+        token = jwt.encode({"public_id": body.username}, secret, "HS256")
+        return {"token":token}
 
     print(body)    
-    return make_response("could not verify", 401, {"Authentication", "login required"})
-#    return {"output": login_status}
+    #return make_response("could not verify", 401, {"Authentication", "login required"})
+    return {"output": login_status}
 
 
 @app.get("/search")
