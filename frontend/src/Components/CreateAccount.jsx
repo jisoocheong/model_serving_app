@@ -1,10 +1,11 @@
 import React, {useState, useEffect} from "react";
 import { render } from 'react-dom';
 import { Redirect } from "react-router-dom";
-import { TextField, Button } from '@material-ui/core';
+import { TextField, Button, Link } from '@material-ui/core';
 import history from "../history"
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
 import Search from "./Search"
+import Login from "./Login"
 import ReactDOM from 'react-dom'
 
 
@@ -26,14 +27,13 @@ function NewUser(){
         }).then(response => {
             return response.json();
         }).then(data => {
-
             console.log(data);
-            const userAdded = JSON.parse(JSON.stringify(data))["result"]
+           const userAdded = JSON.parse(JSON.stringify(data))["result"]
             
 
             if (userAdded) {
-                alert("Successfully added as new user")
                 history.push('/search/');
+                
                 const elem = (
                     <Router>
                         <div>
@@ -44,7 +44,8 @@ function NewUser(){
                     </Router>
                 );
                 ReactDOM.render(elem, document.getElementById("root"))
-
+                
+                alert("Successfully added as new user")
             } else {
                 alert("Could not add as new user")                
             }
@@ -56,6 +57,37 @@ function NewUser(){
         <Button variant="contained" color="primary" onClick={handleSubmit}>Sign Up</Button>
     )
 }
+
+function LoginPage(){
+    const handleSignUp = () => {
+        const responseResult = fetch("http://127.0.0.1:8000/").then(
+            response => {
+                history.push("/")
+                const elem = (
+                <Router>
+                    <div>
+                        <Route path="/">
+                            <Login/>
+                        </Route>
+                    </div>
+                </Router>
+            );
+            ReactDOM.render(elem, document.getElementById("root"))
+
+       
+            
+            }).catch(err => {
+            console.error(err);
+        });
+    }
+    
+    return (
+        <Link onClick={handleSignUp}> 
+        Back to Login Page
+        </Link>
+    )
+}
+
 
 
 export default function CreateAccount() {
@@ -106,6 +138,7 @@ export default function CreateAccount() {
                 <TextField id="secondpassword" type="password" size="small" label="Enter password" variant="outlined" onChange={setSecondPassword} />
             </div>
             <NewUser/>
+            <LoginPage />
         </div>
 
     )
