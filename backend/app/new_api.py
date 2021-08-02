@@ -7,7 +7,8 @@ from dotenv import load_dotenv
 from datetime import datetime, timedelta
 from typing import Optional
 import os
-from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from fastapi.security import OAuth2PasswordBearer
+
 
 class LoginBody(BaseModel):
     username: str
@@ -26,7 +27,7 @@ class Token(BaseModel):
 
 
 app = FastAPI()
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 load_dotenv() # read the env var from .env file
 
 
@@ -44,10 +45,6 @@ app.add_middleware(
 )
 
 
-
-@app.get("/items/")
-async def read_items(token: str = Depends(oauth2_scheme)):
-    return {"token" : token}
 
 
 def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
@@ -67,33 +64,25 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
     return token
 
 
+
 @app.get("/")
 @app.get("/index")
 async def read_root():
     #Add logic for users already logged in
     return {"data": "some data"}
 
-@app.post("/", response_model=Token)
-@app.post("/index", response_model=Token)
-async def login(form_data: LoginBody): 
-    # add logic for checking user input
-    login_status = user_table.check_valid_login(form_data.username, form_data.password)
-    access_token_expires = timedelta(minutes=int(os.environ.get("access_token_expire_minutes")))
-    access_token = create_access_token({"username": form_data.username, "password" : form_data.password}, expires_delta=access_token_expires)
-
-    result = {"access_token": access_token, "token_type": "bearer"}
-    return result
 
 
 
-#@app.post("/", response_model=Token)
-#@app.post("/index", response_model=Token)
-async def checking_user(form_data: OAuth2PasswordRequestForm = Depends()):
+@app.post("/")
+@app.post("/index")
+async def login(body:LoginBody):
     #add logic for checking user input
-    login_status = user_table.check_valid_login(form_data.username, form_data.password)
+    login_status = user_table.check_valid_login(body.username, body.password)
 
-    access_token_expires = timedelta(minutes=int(os.environ.get("access_token_expire_minutes")))
-    access_token = create_access_token({"username": form_data.username, "password" : form_data.password}, expires_delta=access_token_expires)
+
+    access_token_expires = timedelta(minutes=os.environ.get("access_token_expire_minutes"))
+    access_token = create_access_token(body, expires_delta=access_token_expires)
     return {"access_token": access_token, "token_type": "bearer"}
 
 """
@@ -110,9 +99,11 @@ async def search():
     return {"data": "This should show a page with a search bar"}
 
 
+
 @app.get("/create")
 async def get_create():
     return {"data" : "A page for a new user to be born"}
+
 
 
 @app.post("/create")
@@ -121,6 +112,7 @@ async def post_create(body: NewUserBody):
     if body.first_password == body.second_password:
         added_new_user = user_table.add_user(body.username, body.email, body.first_password)
     return {"result": added_new_user} 
+
 
 
 
