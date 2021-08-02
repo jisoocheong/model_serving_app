@@ -20,7 +20,7 @@ function NewUser(){
             "headers": {
             "Content-Type": "application/json"
         },
-            "body": JSON.stringify({"email" : inputEmail, "username" : inputUsername, "firstPassword": inputFirstPassword, "secondPassword": inputSecondPassword})
+            "body": JSON.stringify({"email" : inputEmail, "username" : inputUsername, "first_password": inputFirstPassword, "second_password": inputSecondPassword})
 
         }).then(response => {
             return response.json();

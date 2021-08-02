@@ -8,7 +8,6 @@ def add_user(username: str, email: str, password: str):
     Adds the given user to the user_table. 
     Returns true if the user is successfully added, false otherwise
     """
-    
     # Creates db and table if those don't already exist
     create_model_serving_db()
     create_user_table()

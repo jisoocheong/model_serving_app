@@ -2,7 +2,6 @@ from fastapi import FastAPI, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from app.model_serving_db import user_table
 from pydantic import BaseModel
-from fastapi.security import OAuth2PasswordBearer
 import jwt
 from dotenv import load_dotenv
 import os
@@ -13,9 +12,14 @@ class LoginBody(BaseModel):
     password: str
 
 
-app = FastAPI()
+class NewUserBody(BaseModel):
+    email: str
+    username: str
+    first_password: str
+    second_password: str
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+
+app = FastAPI()
 
 
 load_dotenv() # read the env var from .env file
@@ -34,10 +38,6 @@ app.add_middleware(
 )
 
 
-@app.get("/items/")
-async def read_items(token: str = Depends(oauth2_scheme)):
-    return {"token": token}
-       
 
 @app.get("/")
 @app.get("/index")
@@ -53,16 +53,12 @@ async def read_root():
 async def login(body:LoginBody):
     #add logic for checking user input
     login_status = user_table.check_valid_login(body.username, body.password)
-    if login_status:
-        print("login status is true")
-        print(os.environ.get("secret"))
-        secret = os.environ.get("secret")
-        token = jwt.encode({"public_id": body.username}, secret, "HS256")
-        return {"token":token}
+    secret = os.environ.get("secret")
+    alg = os.environ.get("algorithm")    
+    token = jwt.encode({"result": login_status}, secret, alg)
+    return {"token":token}
 
-    print(body)    
     #return make_response("could not verify", 401, {"Authentication", "login required"})
-    return {"output": login_status}
 
 
 @app.get("/search")
@@ -78,13 +74,10 @@ async def get_create():
 
 
 @app.post("/create")
-async def post_create():
+async def post_create(body: NewUserBody):
+    if body.first_password == body.second_password:
+        user_table.add_user(body.username, body.email, body.first_password)
     return {"data": "new user is created"}
-
-
-
-
-
 
 
 
