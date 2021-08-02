@@ -3,6 +3,9 @@ import { render } from 'react-dom';
 import { Redirect } from "react-router-dom";
 import { TextField, Button } from '@material-ui/core';
 import history from "../history"
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import Search from "./Search"
+import ReactDOM from 'react-dom'
 
 
 var inputEmail = "";
@@ -12,8 +15,6 @@ var inputSecondPassword = "";
 
 function NewUser(){
     const handleSubmit = () => {
-        var isValidUser = false;
-
 
         const responseResult = fetch("http://127.0.0.1:8000/create", {
             "method": "POST",
@@ -25,10 +26,27 @@ function NewUser(){
         }).then(response => {
             return response.json();
         }).then(data => {
-            // fill in with valid new user info
 
-            if (isValidUser) {
-                history.push()
+            console.log(data);
+            const userAdded = JSON.parse(JSON.stringify(data))["result"]
+            
+
+            if (userAdded) {
+                alert("Successfully added as new user")
+                history.push('/search/');
+                const elem = (
+                    <Router>
+                        <div>
+                            <Route path="/search/">
+                                <Search />
+                            </Route>
+                        </div>
+                    </Router>
+                );
+                ReactDOM.render(elem, document.getElementById("root"))
+
+            } else {
+                alert("Could not add as new user")                
             }
         })
     }
