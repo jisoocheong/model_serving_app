@@ -10,7 +10,7 @@
 
 2. Starting up PostgreSQL:
 
-    Navigate to [http://ics-software-engineering.github.io/play-example-postgresql/] and follow step 1
+    Navigate to [https://www.postgresql.org/download/] and select download depending on the OS
 
 3. Run the client-side React app in a different terminal window:
 
