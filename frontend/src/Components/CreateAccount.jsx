@@ -13,10 +13,14 @@ var inputSecondPassword = "";
 function NewUser(){
     const handleSubmit = () => {
         var isValidUser = false;
-        const responseResult = fetch("http://127.0.0.1:8000/create", {
-            
-        // fill in request
 
+
+        const responseResult = fetch("http://127.0.0.1:8000/create", {
+            "method": "POST",
+            "headers": {
+            "Content-Type": "application/json"
+        },
+            "body": JSON.stringify({"email" : inputEmail, "username" : inputUsername, "firstPassword": inputFirstPassword, "secondPassword": inputSecondPassword})
 
         }).then(response => {
             return response.json();
