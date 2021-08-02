@@ -35,9 +35,8 @@ function SubmitLogin() {
             // This gets the returned result 
             console.log(data);
             var token = JSON.parse(JSON.stringify(data))["token"]
-            var decoded = jwt_decode(token)
-            console.log(decoded)
-            if (!(decoded === "not valid user")) {
+            isValidLogin = jwt_decode(token)["result"]
+            if (isValidLogin) {
                history.push('/search/');
             const elem = (
                 <Router>
