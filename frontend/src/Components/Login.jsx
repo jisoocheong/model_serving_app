@@ -6,11 +6,12 @@ import Search from "./Search"
 import CreateUser from "./CreateAccount"
 import history from "../history"
 import ReactDOM from 'react-dom'
+import jwt_decode from "jwt-decode"
+
 
 
 var inputUsername = "";
 var inputPassword = "";
-
 
 function SubmitLogin() {
     const LoginContext = React.createContext({
@@ -32,11 +33,12 @@ function SubmitLogin() {
             return response.json();
         }).then(data => {
             // This gets the returned result 
-            isValidLogin = JSON.parse(JSON.stringify(data))["output"] 
             console.log(data);
-
-            if (isValidLogin) {
-            history.push('/search/');
+            var token = JSON.parse(JSON.stringify(data))["token"]
+            var decoded = jwt_decode(token)
+            console.log(decoded)
+            if (!(decoded === "not valid user")) {
+               history.push('/search/');
             const elem = (
                 <Router>
                     <div>
@@ -47,12 +49,13 @@ function SubmitLogin() {
                 </Router>
             );
             ReactDOM.render(elem, document.getElementById("root"))
-        }
+ 
+            }
+
         }).catch(err => {
             console.error(err);
         });
     }
-
     return (
             <Button variant="contained" color="primary" onClick={handleSubmit}> Submit</Button>
     )
@@ -103,7 +106,6 @@ export default function Login() {
     }, []);
 
 
-
     const setUsername = event => {
         inputUsername = event.target.value
     };
@@ -127,9 +129,5 @@ export default function Login() {
             <SubmitLogin/>
             <SignUp/>
         </div>
-
     )
-
-
-
 };
