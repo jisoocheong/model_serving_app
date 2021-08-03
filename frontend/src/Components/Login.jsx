@@ -34,7 +34,8 @@ function SubmitLogin() {
         }).then(data => {
             // This gets the returned result 
             console.log(data);
-            var token = JSON.parse(JSON.stringify(data))["token"]
+            var token = JSON.parse(JSON.stringify(data))["access_token"]
+            alert(token)
             isValidLogin = jwt_decode(token)["result"]
             if (isValidLogin) {
                history.push('/search/');
