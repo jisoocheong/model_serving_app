@@ -68,7 +68,18 @@ def create_model_table():
 
 
     # Creating a table
-    cursor.execute('''CREATE TABLE IF NOT EXISTS model_table(id INT PRIMARY KEY NOT NULL)''')
+    cursor.execute('''CREATE TABLE IF NOT EXISTS model_table(id INT PRIMARY KEY NOT NULL, ''' + \
+            '''framework TEXT NOT NULL, ''' + \
+            '''name TEXT NOT NULL, ''' + \
+            '''version TEXT[] NOT NULL, ''' + \
+            '''device_dependency TEXT[] NOT NULL, ''' + \
+            '''description TEXT NOT NULL, ''' + \
+            '''tags TEXT[] NOT NULL, ''' + \
+            '''input TEXT NOT NULL, ''' + \
+            '''output TEXT NOT NULL, ''' + \
+            '''test_code TEXT NOT NULL, ''' + \
+            '''screenshot BYTEA[] NOT NULL''' + \
+            ''' )''')
 
 
     # Close connection
