@@ -1,8 +1,42 @@
 import React, {useState, useEffect} from "react";
 import { render } from 'react-dom';
-import { Redirect } from "react-router-dom";
-import { TextField } from '@material-ui/core';
+import { TextField, Link } from '@material-ui/core';
+import history from "../history";
+import { BrowserRouter as Router, Route } from 'react-router-dom';
+import ReactDOM from "react-dom";
+import CreateUser from "./CreateAccount";
+
+
+function AddModel(){
+    const handleSignUp = () => {
+        const responseResult = fetch("http://127.0.0.1:8000/create").then(
+            response => {
+                history.push("/create")
+                const elem = (
+                <Router>
+                    <div>
+                        <Route path="/create/">
+                            <CreateUser />
+                        </Route>
+                    </div>
+                </Router>
+            );
+            ReactDOM.render(elem, document.getElementById("root"))
+       
+            
+            }).catch(err => {
+            console.error(err);
+        });
+    }
     
+    return (
+        <Link onClick={handleSignUp}> 
+        Add new model
+        </Link>
+    )
+}
+
+
 
 export default function Search() {
     const [search, setSearch] = useState([])
@@ -18,7 +52,8 @@ export default function Search() {
         <div>
                 <h3>Search for a model</h3>
                 <label htmlFor="model">Model:</label><br/>
-                <TextField id="search" size="small" variant="outlined"/>
+                <TextField id="search" size="small" variant="outlined"/> <br/>
+                <AddModel />
         </div>
     
     );

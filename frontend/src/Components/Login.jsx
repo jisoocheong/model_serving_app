@@ -2,11 +2,11 @@ import React, {useState, useEffect} from "react";
 import { render } from 'react-dom';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { Button, TextField, Link } from '@material-ui/core';
-import Search from "./Search"
-import CreateUser from "./CreateAccount"
-import history from "../history"
-import ReactDOM from 'react-dom'
-import jwt_decode from "jwt-decode"
+import Search from "./Search";
+import CreateUser from "./CreateAccount";
+import history from "../history";
+import ReactDOM from 'react-dom';
+import jwt_decode from "jwt-decode";
 
 
 
@@ -35,7 +35,6 @@ function SubmitLogin() {
             // This gets the returned result 
             console.log(data);
             var token = JSON.parse(JSON.stringify(data))["access_token"]
-            alert(token)
             isValidLogin = jwt_decode(token)["result"]
             if (isValidLogin) {
                history.push('/search/');

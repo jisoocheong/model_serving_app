@@ -1,6 +1,5 @@
 import React, {useState, useEffect} from "react";
 import { render } from 'react-dom';
-import { Redirect } from "react-router-dom";
 import { TextField, Button, Link } from '@material-ui/core';
 import history from "../history"
 import { BrowserRouter as Router, Route } from 'react-router-dom';
@@ -28,25 +27,25 @@ function NewUser(){
             return response.json();
         }).then(data => {
             console.log(data);
-           const userAdded = JSON.parse(JSON.stringify(data))["result"]
-            
+           const userAdded = JSON.parse(JSON.stringify(data))["result"];
+             if (userAdded) {
+               history.push('/search/');
+            const elem = (
+                <Router>
+                    <div>
+                        <Route path="/">
+                            <Login />
+                        </Route>
+                    </div>
+                </Router>
+            );
+            ReactDOM.render(elem, document.getElementById("root"))
+            alert("Successfully added as new user")
 
-            if (userAdded) {
-                history.push('/search/');
-                
-                const elem = (
-                    <Router>
-                        <div>
-                            <Route path="/search/">
-                                <Search />
-                            </Route>
-                        </div>
-                    </Router>
-                );
-                ReactDOM.render(elem, document.getElementById("root"))
-                
-                alert("Successfully added as new user")
-            } else {
+            }
+           
+
+             else {
                 alert("Could not add as new user")                
             }
         })
