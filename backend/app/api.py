@@ -79,7 +79,7 @@ async def login(form_data: LoginBody):
     # add logic for checking user input
     login_status = user_table.check_valid_login(form_data.username, form_data.password)
     access_token_expires = timedelta(minutes=int(os.environ.get("access_token_expire_minutes")))
-    access_token = create_access_token({"username": form_data.username, "password" : form_data.password}, expires_delta=access_token_expires)
+    access_token = create_access_token({"username": form_data.username, "password" : form_data.password, "result": login_status}, expires_delta=access_token_expires)
 
     result = {"access_token": access_token, "token_type": "bearer"}
     return result
