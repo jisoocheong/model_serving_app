@@ -29,10 +29,13 @@ app = FastAPI()
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/")
 load_dotenv() # read the env var from .env file
 
+backend_ip_address = os.environ.get("BACKEND_IP_ADDRESS")
+frontend_port = os.environ.get("FRONTEND_PORT")
+
 
 origins = [
-        "http://localhost:3000",
-        "localhost:3000"
+        "http://" + backend_ip_address + ":" + frontend_port,
+        backend_ip_address + ":" + frontend_port
 ]
 
 app.add_middleware(
@@ -61,8 +64,8 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
     else:
         expire = datetime.utcnow() + timedelta(minutes=15)
     to_encode.update({"exp": expire})
-    secret_key = os.environ.get("secret")
-    alg = os.environ.get("algorithm")    
+    secret_key = os.environ.get("SECRET")
+    alg = os.environ.get("ALGORITHM")    
     token = jwt.encode(to_encode, secret_key, alg)
     return token
 
@@ -78,7 +81,7 @@ async def read_root():
 async def login(form_data: LoginBody): 
     # add logic for checking user input
     login_status = user_table.check_valid_login(form_data.username, form_data.password)
-    access_token_expires = timedelta(minutes=int(os.environ.get("access_token_expire_minutes")))
+    access_token_expires = timedelta(minutes=int(os.environ.get("ACCESS_TOKEN_EXPIRE_MINUTES")))
     access_token = create_access_token({"username": form_data.username, "password" : form_data.password, "result": login_status}, expires_delta=access_token_expires)
 
     result = {"access_token": access_token, "token_type": "bearer"}
