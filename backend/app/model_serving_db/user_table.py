@@ -1,7 +1,7 @@
 import psycopg2
-#from creators import *
 from werkzeug.security import generate_password_hash, check_password_hash
-from app.model_serving_db.creators import *
+#from app.model_serving_db.creators import *
+from creators import *
 
 def add_user(username: str, email: str, password: str):
     """

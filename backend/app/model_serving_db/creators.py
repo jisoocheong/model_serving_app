@@ -69,9 +69,11 @@ def create_model_table():
 
     # Creating a table
     cursor.execute('''CREATE TABLE IF NOT EXISTS model_table(id INT PRIMARY KEY NOT NULL, ''' + \
+            '''adder_username TEXT NOT NULL, ''' + \
             '''framework TEXT NOT NULL, ''' + \
             '''name TEXT NOT NULL, ''' + \
             '''version TEXT[] NOT NULL, ''' + \
+            '''size TEXT NOT NULL, ''' + \
             '''device_dependency TEXT[] NOT NULL, ''' + \
             '''description TEXT NOT NULL, ''' + \
             '''tags TEXT[] NOT NULL, ''' + \

@@ -113,17 +113,27 @@ async def search():
     return {"data": "This should show a page with a search bar"}
 
 
-@app.get("/create")
+@app.get("/create_user")
 async def get_create():
     return {"data" : "A page for a new user to be born"}
 
 
-@app.post("/create")
+@app.post("/create_user")
 async def post_create(body: NewUserBody):
     added_new_user = False
     if body.first_password == body.second_password:
         added_new_user = user_table.add_user(body.username, body.email, body.first_password)
     return {"result": added_new_user} 
+
+
+#@app.post("/new_model")
+#async def post_new_model(body: NewModelBody):
+    # will call in function that adds a new model to model_table
+#    pass
+
+
+
+
 
 
 
