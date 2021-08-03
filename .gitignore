@@ -3,4 +3,8 @@ node_modules/
 build/
 venv/
 __pycache__
+
+# vim temporary files
+*~
 *.swp
+*.swo
