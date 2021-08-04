@@ -31,11 +31,10 @@ def get_user(username: str, settings: Settings = Depends(get_settings)):
     conn.close()
 
     # return user
-    return UserInDB({
-        "username": existing_user[1],
-        "email": existing_user[2],
-        "hashed_password": existing_user[3]
-    })
+    return UserInDB(
+        username=existing_user[1], 
+        email=existing_user[2], 
+        hashed_password=existing_user[3])
 
 
 def create_user(username: str, email: str, password: str, settings: Settings = Depends(get_settings)):
@@ -70,9 +69,7 @@ def create_user(username: str, email: str, password: str, settings: Settings = D
     conn.close()
 
     # return user
-    return UserInDB({
-        "username": existing_user[1],
-        "email": existing_user[2],
-        "hashed_password": existing_user[3]
-    })
-
+    return UserInDB(
+        username=existing_user[1],
+        email=existing_user[2],
+        hashed_password=existing_user[3])
