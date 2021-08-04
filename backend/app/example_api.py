@@ -56,6 +56,9 @@ async def read_own_items(current_user: User = Depends(get_current_active_user)):
 async def create_user(username: str, email: str, password:str):
     return sign_up_new_user(username, email, password)
 
+
+
+
 @app.get("/info")
 async def info(settings: Settings = Depends(get_settings)):
     return settings

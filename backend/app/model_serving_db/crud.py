@@ -17,11 +17,8 @@ def get_user(username: str):
     create_user_table()
 
     # connect to database and get user
-    host="127.0.0.1"
-    port="5432"
-    print(settings)
-    #host = settings.database_host
-    #port = settings.database_port
+    host = settings.database_host
+    port = settings.database_port
     
     conn = psycopg2.connect(database="model_serving_db", user="postgres", password="password", host=host, port=port)
     conn.autocommit = True
@@ -54,11 +51,9 @@ def create_user(username: str, email: str, password: str):
     create_user_table()
 
 
-    host="127.0.0.1"
-    port="5432"
     # connect to database and get user
-    #host = settings.database_host
-    #port = settings.database_port
+    host = settings.database_host
+    port = settings.database_port
     
     conn = psycopg2.connect(database="model_serving_db", user="postgres", password="password", host=host, port=port)
     conn.autocommit = True
