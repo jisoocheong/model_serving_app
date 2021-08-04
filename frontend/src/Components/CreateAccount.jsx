@@ -16,7 +16,7 @@ var inputSecondPassword = "";
 function NewUser(){
     const handleSubmit = () => {
 
-        const responseResult = fetch("http://127.0.0.1:8000/create", {
+        const responseResult = fetch("http://127.0.0.1:8000/create_user", {
             "method": "POST",
             "headers": {
             "Content-Type": "application/json"
@@ -92,7 +92,7 @@ function LoginPage(){
 export default function CreateAccount() {
     const [search, setSearch] = useState([])
     const fetchSearch = async () => {
-        const response = await fetch("http://localhost:8000/create")
+        const response = await fetch("http://localhost:8000/create_user")
         const search = await response.json()
         setSearch(search.data)
     }

@@ -6,7 +6,12 @@ from .schemas import UserInDB
 from .creators import create_model_serving_db, create_user_table
 
 
+
 def get_user(username: str):
+    """
+    Returns the user of the given username. False if it is not found 
+    """    
+
     # Creates db and table if those don't already exist
     create_model_serving_db()
     create_user_table()
@@ -25,6 +30,8 @@ def get_user(username: str):
     cursor.execute(f'''SELECT * FROM user_table WHERE username = '{username}';''')
 
     existing_user = cursor.fetchone()
+    if existing_user is None:
+        return False
 
     # Close the connection
     conn.close()
@@ -37,14 +44,21 @@ def get_user(username: str):
 
 
 def create_user(username: str, email: str, password: str):
+
+    """
+    Returns the user that is created. False if the username already exists 
+    """
+
     # Creates db and table if those don't already exist
     create_model_serving_db()
     create_user_table()
 
 
+    host="127.0.0.1"
+    port="5432"
     # connect to database and get user
-    host = settings.database_host
-    port = settings.database_port
+    #host = settings.database_host
+    #port = settings.database_port
     
     conn = psycopg2.connect(database="model_serving_db", user="postgres", password="password", host=host, port=port)
     conn.autocommit = True
@@ -61,11 +75,14 @@ def create_user(username: str, email: str, password: str):
     if existing_user is None:
         cursor.execute(f'''INSERT INTO user_table(id, username, email, password_hash, logged_in) VALUES ({highest_id + 1}, '{username}', '{email}', '{hashed_password}', true);''')
         print("Successfully added a new user")
+        cursor.execute(f'''SELECT * FROM user_table WHERE username = '{username}';''')
+        existing_user = cursor.fetchone()
+        # Close the connection
+        conn.close()
+    else:
+        conn.close()
+        return False
 
-    existing_user = cursor.fetchone()
-    
-    # Close the connection
-    conn.close()
 
     # return user
     return UserInDB(

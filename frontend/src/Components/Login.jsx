@@ -64,13 +64,13 @@ function SubmitLogin() {
 
 function SignUp(){
     const handleSignUp = () => {
-        const responseResult = fetch("http://127.0.0.1:8000/create").then(
+        const responseResult = fetch("http://127.0.0.1:8000/create_user").then(
             response => {
-                history.push("/create")
+                history.push("/create_user")
                 const elem = (
                 <Router>
                     <div>
-                        <Route path="/create/">
+                        <Route path="/create_user/">
                             <CreateUser />
                         </Route>
                     </div>

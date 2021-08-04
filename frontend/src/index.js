@@ -8,11 +8,12 @@ function App() {
     
     return (
         <div>
-            <Login />
+            <Login/>
         </div>
             )
 }
 
 const rootElement = document.getElementById("root")
 render(<App />, rootElement)
+
 
