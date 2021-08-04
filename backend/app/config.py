@@ -12,6 +12,16 @@ class Settings(BaseSettings):
     access_token_expire_minute: int = 30
     database_host: str = '127.0.0.1'
     database_port: str = '5432'
+
+    def settings_dict(self):
+        # returns the dictionary form of Settings
+        return {
+                "secret_key"  : self.secret_key,
+                "algorithm"  : self.algorithm,
+                "access_token_expire_minute"  : self.access_token_expire_minute,
+                "database_host"  : self.database_host,
+                "database_port"  : self.database_port  
+                }
     
     class Config:
         parent_dir = os.path.dirname(os.path.abspath(__file__))
