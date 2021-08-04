@@ -36,7 +36,7 @@ def get_user(username: str, settings: Settings = Depends(get_settings)):
     # return user
     return UserInDB(
         username=existing_user[1],
-        email=existing_user[2],
+        email=existing_user[2], 
         hashed_password=existing_user[3])
 
 
