@@ -1,6 +1,6 @@
 import psycopg2
-#from app.model_serving_db.creators import *
-from creators import *
+from app.model_serving_db.creators import *
+#from creators import *
 
 def add_model(username: str, framework: str, name: str, version: list, size: str, device_dep: list, description: str, tags: list, input: str, output: str, test_code: str, screenshot: list):
     """
