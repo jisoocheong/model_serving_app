@@ -38,7 +38,7 @@ def add_model(username: str, framework: str, name: str, version: list, size: str
     
     blobs_str = blobs_str[:-1] + "]"
 
-    cursor.execute(f'''SELECT * FROM model_table WHERE name = '{name}';''')
+    cursor.execute(f'''SELECT * FROM model_table WHERE name = '{name}' AND version = '{version}';''')
     existing_model = cursor.fetchone()
     if existing_model is None:
         result = True

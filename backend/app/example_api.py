@@ -30,14 +30,12 @@ async def login_for_access_token(
     form_data: OAuth2PasswordRequestForm = Depends(), 
     settings: Settings = Depends(get_settings)):
     user = authenticate_user(form_data.username, form_data.password)
-    
     if not user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Incorrect username or password",
             headers={"WWW-Authenticate": "Bearer"},
         )
-        print("asoidhf;oas")
     access_token_expires = timedelta(minutes=settings.access_token_expire_minute)
     access_token = create_access_token(
         data={"sub": user.username}, expires_delta=access_token_expires
