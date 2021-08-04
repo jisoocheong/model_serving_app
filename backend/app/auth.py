@@ -3,7 +3,7 @@ import app.security as security
 from jose import JWTError, jwt
 from fastapi import Depends, HTTPException, status
 
-from app.config import Settings, get_settings
+from app.config import settings
 from app.security import verify_password
 from app.model_serving_db.schemas import TokenData, User
 from app.model_serving_db.crud import get_user, create_user
@@ -28,8 +28,7 @@ def sign_up_new_user(username: str, email: str, password: str):
 
 
 async def get_current_user(
-    token: str = Depends(security.oauth2_scheme),
-    settings: Settings = Depends(get_settings)):
+    token: str = Depends(security.oauth2_scheme)):
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Could not validate credentials",
