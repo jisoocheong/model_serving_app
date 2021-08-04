@@ -6,16 +6,17 @@ from .schemas import UserInDB
 from .creators import create_model_serving_db, create_user_table
 
 
-
 def get_user(username: str):
     # Creates db and table if those don't already exist
     create_model_serving_db()
     create_user_table()
 
-
     # connect to database and get user
-    host = settings.database_host
-    port = settings.database_port
+    host="127.0.0.1"
+    port="5432"
+    print(settings)
+    #host = settings.database_host
+    #port = settings.database_port
     
     conn = psycopg2.connect(database="model_serving_db", user="postgres", password="password", host=host, port=port)
     conn.autocommit = True
@@ -30,7 +31,7 @@ def get_user(username: str):
 
     # return user
     return UserInDB(
-        username=existing_user[1], 
+        username=existing_user[1],
         email=existing_user[2], 
         hashed_password=existing_user[3])
 
