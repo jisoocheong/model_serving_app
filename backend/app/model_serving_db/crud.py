@@ -1,15 +1,13 @@
 import psycopg2
 
-from fastapi import Depends
-
-from app.config import Settings, get_settings
+from app.config import settings
 from app.security import get_password_hash
 from .schemas import UserInDB
 from .creators import create_model_serving_db, create_user_table
 
 
 
-def get_user(username: str, settings: Settings = Depends(get_settings)):
+def get_user(username: str):
     # Creates db and table if those don't already exist
     create_model_serving_db()
     create_user_table()
@@ -37,7 +35,7 @@ def get_user(username: str, settings: Settings = Depends(get_settings)):
         hashed_password=existing_user[3])
 
 
-def create_user(username: str, email: str, password: str, settings: Settings = Depends(get_settings)):
+def create_user(username: str, email: str, password: str):
     # Creates db and table if those don't already exist
     create_model_serving_db()
     create_user_table()
