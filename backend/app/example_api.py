@@ -6,7 +6,8 @@ from fastapi.security import OAuth2PasswordRequestForm
 from app.config import Settings, get_settings
 from app.security import create_access_token
 from app.auth import sign_up_new_user, authenticate_user, get_current_active_user
-from app.model_serving_db.schemas import Token, User
+from app.model_serving_db.schemas import Token, User, Model
+from app.model_serving_db.model_table import add_model
 
 
 app = FastAPI()
@@ -53,12 +54,17 @@ async def read_own_items(current_user: User = Depends(get_current_active_user)):
     return [{"item_id": "Foo", "owner": current_user.username}]
 
 @app.post("/create_user")
-async def create_user(username: str, email: str, password:str):
-    return sign_up_new_user(username, email, password)
+async def create_user(new_user: User = Depends(sign_up_new_user)):
+    return new_user
 
 
-
+@app.post("/create_model")
+async def create_model(new_model: Model = Depends(add_model)):
+    return new_model
+ 
 
 @app.get("/info")
 async def info(settings: Settings = Depends(get_settings)):
     return settings
+
+

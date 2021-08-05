@@ -25,11 +25,11 @@ def show_img(name: str):
     cursor = conn.cursor()
 
     # Add row with new model
-    cursor.execute('''SELECT screenshot FROM model_table;''')
+    cursor.execute(f'''SELECT screenshot FROM model_table WHERE name = '{name}';''')
     pic = cursor.fetchone()[0]
 
     print((pic[0]))
-    open("img/new_img.jpeg", 'wb').write(pic[0])
+    open("img/new_bisenet_img.jpeg", 'wb').write(pic[0])
 
 
     #bytearray(first_pic)
@@ -37,4 +37,4 @@ def show_img(name: str):
     conn.close()
     #return image
         
-show_img("name")
+show_img("BiSeNet")

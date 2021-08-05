@@ -1,10 +1,8 @@
 import psycopg2
-
 from app.config import settings
 from app.security import get_password_hash
 from .schemas import UserInDB
 from .creators import create_model_serving_db, create_user_table
-
 
 
 def get_user(username: str):

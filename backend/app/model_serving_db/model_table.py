@@ -34,21 +34,31 @@ def add_model(username: str, framework: str, name: str, version: list, size: str
             blob = psycopg2.Binary(drawing)
             blobs_str = blobs_str + f"{blob},"
         except Exception as error:
+            print(error)
             return result 
     
     blobs_str = blobs_str[:-1] + "]"
 
-    cursor.execute(f'''SELECT * FROM model_table WHERE name = '{name}' AND version = '{version}';''')
-    existing_model = cursor.fetchone()
-    if existing_model is None:
-        result = True
-        cursor.execute('''INSERT INTO model_table(id, adder_username, framework, name,''' + \
+
+    cursor.execute(f'''SELECT * FROM model_table WHERE name = '{name}';''')
+    existing_models = cursor.fetchall()
+
+    
+    # checking versions
+    for model in existing_models:
+        model_version = model[4]
+        if set(model_version) == set(version):
+            conn.close() 
+            return result
+
+    result = True
+    cursor.execute('''INSERT INTO model_table(id, adder_username, framework, name,''' + \
                 ''' version, size, device_dependency, description, tags, input, output, test_code, screenshot) ''' + \
                         f'''VALUES ({highest_id + 1}, '{username}', '{framework}', '{name}', ARRAY{version}, '{size}' ''' + \
                         f''', ARRAY{device_dep}, '{description}', ARRAY{tags}, '{input}', '{output}', ''' + \
                         f''''{test_code}', ARRAY{blobs_str});''')
          
-        print("Successfully added a new model")
+    print("Successfully added a new model")
 
     # Close the connection
     conn.close()

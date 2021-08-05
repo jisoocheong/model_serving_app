@@ -20,3 +20,19 @@ class User(BaseModel):
 
 class UserInDB(User):
     hashed_password: str
+
+
+class Model(BaseModel):
+    username: str
+    framework: str
+    name: str
+    version: list
+    size: str
+    device_dep: list
+    description: str
+    tags: list
+    input: str
+    output: str
+    test_code: str
+    screenshot: list
+ 
