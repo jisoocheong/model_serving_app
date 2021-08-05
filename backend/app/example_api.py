@@ -7,7 +7,7 @@ from app.config import Settings, get_settings
 from app.security import create_access_token
 from app.auth import sign_up_new_user, authenticate_user, get_current_active_user
 from app.model_serving_db.schemas import Token, User, Model
-from app.model_serving_db.model_table import add_model
+from app.model_serving_db.model_table import add_model, search_model
 
 
 app = FastAPI()
@@ -69,6 +69,26 @@ async def get_img():
     return FileResponse("model_serving_db/img/pikachu.png" )
     
  
+@app.get("/search")
+async def get_searched_models(search: str):
+    """
+    This will get the id, name, version, framework, and tags of the models 
+    """
+    found_models = search_model(search)
+    print(found_models)
+    return {"found models" : found_models}
+
+
+@app.get("/get_model")
+async def get_model():
+    """
+    This will get the actual model with all the information that comes with it 
+    """
+    pass
+
+
+
+
 
 @app.get("/info")
 async def info(settings: Settings = Depends(get_settings)):
