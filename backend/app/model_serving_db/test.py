@@ -29,7 +29,7 @@ def show_img(name: str):
     pic = cursor.fetchone()[0]
 
     print((pic[0]))
-    open("img/new_bisenet_img.jpeg", 'wb').write(pic[0])
+    open("new_bisenet_img.jpeg", 'wb').write(pic[0])
 
 
     #bytearray(first_pic)

@@ -61,6 +61,13 @@ async def create_user(new_user: User = Depends(sign_up_new_user)):
 @app.post("/create_model")
 async def create_model(new_model: Model = Depends(add_model)):
     return new_model
+
+
+@app.get("/testing_img")
+async def get_img():
+    from fastapi.responses import FileResponse    
+    return FileResponse("model_serving_db/img/pikachu.png" )
+    
  
 
 @app.get("/info")
