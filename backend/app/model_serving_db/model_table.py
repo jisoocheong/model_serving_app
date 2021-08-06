@@ -1,8 +1,8 @@
 import psycopg2
-from app.config import settings
-from app.model_serving_db.creators import *
-from app.model_serving_db.schemas import Model
-#from creators import *
+
+from .creators import global_config, create_model_serving_db, create_model_table
+from .schemas import Model
+
 
 def add_model(username: str, framework: str, name: str, version: list, size: str, device_dep: list, description: str, tags: list, input: str, output: str, test_code: str, screenshot: list):
     """
@@ -15,8 +15,8 @@ def add_model(username: str, framework: str, name: str, version: list, size: str
     create_model_table()
 
     # connect to database and get user
-    host = settings.database_host
-    port = settings.database_port
+    host = global_config.database_host
+    port = global_config.database_port
 
     # Establishing the connection
     conn = psycopg2.connect(database="model_serving_db", user="postgres", password="password", host=host, port=port)
@@ -61,7 +61,6 @@ def add_model(username: str, framework: str, name: str, version: list, size: str
                         f'''VALUES ({highest_id + 1}, '{username}', '{framework}', '{name}', ARRAY{version}, '{size}' ''' + \
                         f''', ARRAY{device_dep}, '{description}', ARRAY{tags}, '{input}', '{output}', ''' + \
                         f''''{test_code}', ARRAY{blobs_str});''')
-         
     print("Successfully added a new model")
 
     # Close the connection
@@ -77,8 +76,8 @@ def search_model(search :str):
     """
 
     # connect to database and get user
-    host = settings.database_host
-    port = settings.database_port
+    host = global_config.database_host
+    port = global_config.database_port
 
     # Establishing the connection
     conn = psycopg2.connect(database="model_serving_db", user="postgres", password="password", host=host, port=port)
@@ -97,10 +96,10 @@ def get_model_by_id(id: int) :
     Returns the model according to the given id number 
     """
     import base64
-   
+    
     # connect to database and get user
-    host = settings.database_host
-    port = settings.database_port
+    host = global_config.database_host
+    port = global_config.database_port
 
     # Establishing the connection
     conn = psycopg2.connect(database="model_serving_db", user="postgres", password="password", host=host, port=port)
@@ -167,8 +166,8 @@ def show_img_by_id(id : int):
     import PIL.Image as Image
 
     # connect to database and get user
-    host = settings.database_host
-    port = settings.database_port
+    host = global_config.database_host
+    port = global_config.database_port
 
     # Establishing the connection
     conn = psycopg2.connect(database="model_serving_db", user="postgres", password="password", host=host, port=port)

@@ -1,13 +1,17 @@
 import psycopg2
 
+from config import settings as global_config
+
 
 def create_model_serving_db():
     """
     Establishes a database for this model serving app 
     """
+    host = global_config.database_host
+    port = global_config.database_port
 
     # Establishing the connection
-    conn = psycopg2.connect(database="postgres", user="postgres", password="password", host="127.0.0.1", port="5432")
+    conn = psycopg2.connect(database="postgres", user="postgres", password="password", host=host, port=port)
     conn.autocommit = True
 
 
@@ -29,16 +33,18 @@ def create_model_serving_db():
 
     # Close connection
     conn.close()
-        
+    return
 
 
 def create_user_table():
     """
     Creates a table for users 
     """
+    host = global_config.database_host
+    port = global_config.database_port
 
     # Establishing the connection
-    conn = psycopg2.connect(database="model_serving_db", user="postgres", password="password", host="127.0.0.1", port = "5432")
+    conn = psycopg2.connect(database="model_serving_db", user="postgres", password="password", host=host, port=port)
     conn.autocommit = True
     
     # Creating a cursor object using the cursor() method
@@ -51,16 +57,19 @@ def create_user_table():
 
     # Close connection
     conn.close()
-    
+    return
 
 
 def create_model_table():
     """
     Creates a table for users 
     """
+    
+    host = global_config.database_host
+    port = global_config.database_port
 
     # Establishing the connection
-    conn = psycopg2.connect(database="model_serving_db", user="postgres", password="password", host="127.0.0.1", port = "5432")
+    conn = psycopg2.connect(database="model_serving_db", user="postgres", password="password", host=host, port=port)
     conn.autocommit = True
     
     # Creating a cursor object using the cursor() method
@@ -86,4 +95,4 @@ def create_model_table():
 
     # Close connection
     conn.close()
-
+    return

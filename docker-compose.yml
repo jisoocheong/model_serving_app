@@ -1,0 +1,24 @@
+version: '3.8'
+services: 
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    image: model_serving/backend:latest
+    ports: 
+      - '48000:8000'
+
+  # frontend:
+  #   build: ./frontend
+
+  database:
+    image: postgres
+    environment: 
+      POSTGRES_PASSWORD: password
+    volumes: 
+      - 'jisoo_db:/var/lib/postgres/data'
+    ports:
+      - '45432:5432'
+
+volumes: 
+  jisoo_db:

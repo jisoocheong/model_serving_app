@@ -1,8 +1,8 @@
 import psycopg2
-from app.config import settings
-from app.security import get_password_hash
+
 from .schemas import UserInDB
-from .creators import create_model_serving_db, create_user_table
+from .creators import create_model_serving_db, create_user_table, global_config
+from security import get_password_hash
 
 
 def get_user(username: str):
@@ -15,8 +15,8 @@ def get_user(username: str):
     create_user_table()
 
     # connect to database and get user
-    host = settings.database_host
-    port = settings.database_port
+    host = global_config.database_host
+    port = global_config.database_port
     
     conn = psycopg2.connect(database="model_serving_db", user="postgres", password="password", host=host, port=port)
     conn.autocommit = True
@@ -50,8 +50,8 @@ def create_user(username: str, email: str, password: str):
 
 
     # connect to database and get user
-    host = settings.database_host
-    port = settings.database_port
+    host = global_config.database_host
+    port = global_config.database_port
     
     conn = psycopg2.connect(database="model_serving_db", user="postgres", password="password", host=host, port=port)
     conn.autocommit = True

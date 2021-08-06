@@ -1,12 +1,12 @@
-import app.security as security
+import security
 
 from jose import JWTError, jwt
 from fastapi import Depends, HTTPException, status
 
-from app.config import settings
-from app.security import verify_password
-from app.model_serving_db.schemas import TokenData, User
-from app.model_serving_db.crud import get_user, create_user
+from config import settings as global_config
+from security import verify_password
+from model_serving_db.schemas import TokenData, User
+from model_serving_db.crud import get_user, create_user
 
 
 def authenticate_user(username: str, password: str):
@@ -35,7 +35,7 @@ async def get_current_user(
         headers={"WWW-Authenticate": "Bearer"},
     )
     try:
-        payload = jwt.decode(token, settings.secret_key, algorithms=[settings.algorithm])
+        payload = jwt.decode(token, global_config.secret_key, algorithms=[global_config.algorithm])
         username: str = payload.get("sub")
         if username is None:
             raise credentials_exception

@@ -2,11 +2,11 @@ from datetime import timedelta
 from fastapi import Depends, FastAPI, HTTPException, status
 # from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import OAuth2PasswordRequestForm
-from app.config import Settings, get_settings
-from app.security import create_access_token
-from app.auth import sign_up_new_user, authenticate_user, get_current_active_user
-from app.model_serving_db.schemas import Token, User, Model
-from app.model_serving_db.model_table import add_model, search_model, get_model_by_id, show_img_by_id
+from config import Settings, get_settings
+from security import create_access_token
+from auth import sign_up_new_user, authenticate_user, get_current_active_user
+from model_serving_db.schemas import Token, User, Model
+from model_serving_db.model_table import add_model, search_model, get_model_by_id, show_img_by_id
 
 
 app = FastAPI()
