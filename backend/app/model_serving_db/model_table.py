@@ -96,6 +96,7 @@ def get_model_by_id(id: int) :
     """
     Returns the model according to the given id number 
     """
+    import base64
    
     # connect to database and get user
     host = settings.database_host
@@ -113,6 +114,11 @@ def get_model_by_id(id: int) :
     result_model = None
     if model is not None:
 
+        # converting screenshots to base64
+        base64_imgs = []
+        for img in model[12]:
+            base64_imgs.append(base64.b64encode(img).decode("utf-8"))
+
         result_model = Model(
         username=model[1],
         framework=model[2],
@@ -125,7 +131,7 @@ def get_model_by_id(id: int) :
         input=model[9],
         output=model[10],
         test_code=model[11],
-        screenshot=model[12]
+        screenshot=base64_imgs
             )
 
 
@@ -151,20 +157,18 @@ def get_model_by_id(id: int) :
 
 """
 
-import psycopg2
-import io
-
-import PIL.Image as Image
 
 def show_img_by_id(id : int):
     """
     reads blob data of the model with the matching id from the model_table
     Returns the number of images in this model
     """
+    import io
+    import PIL.Image as Image
+
     # connect to database and get user
     host = settings.database_host
     port = settings.database_port
-
 
     # Establishing the connection
     conn = psycopg2.connect(database="model_serving_db", user="postgres", password="password", host=host, port=port)
@@ -178,8 +182,8 @@ def show_img_by_id(id : int):
     cursor.execute(f'''SELECT name, screenshot FROM model_table WHERE id = {id};''')
     pics = cursor.fetchall()[0]
 
-    #print(pics)
     #open(f"{pics[0]}.jpeg", 'wb').write(pics[1][0])
+
 
     for i in range(len(pics[1])):
         open(f"{pics[0]}_{i}.jpeg", 'wb').write(pics[1][i])

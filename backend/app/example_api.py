@@ -77,7 +77,6 @@ async def get_searched_models(search: str):
     return {"found models" : found_models}
 
 
-
 @app.get("/get_model")
 async def get_model(id: int):
     """
@@ -89,10 +88,15 @@ async def get_model(id: int):
         return "No model found"
 
     num_imgs = show_img_by_id(id)    
-
     return model
+
+
+
 @app.get("/info")
 async def info(settings: Settings = Depends(get_settings)):
     return settings
+
+
+
 
 
