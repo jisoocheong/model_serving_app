@@ -2,7 +2,6 @@ from datetime import timedelta
 from fastapi import Depends, FastAPI, HTTPException, status
 # from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import OAuth2PasswordRequestForm
-
 from app.config import Settings, get_settings
 from app.security import create_access_token
 from app.auth import sign_up_new_user, authenticate_user, get_current_active_user
@@ -43,30 +42,50 @@ async def login_for_access_token(
     )
     return {"access_token": access_token, "token_type": "bearer"}
 
-
 @app.get("/users/me/", response_model=User)
 async def read_users_me(current_user: User = Depends(get_current_active_user)):
     return current_user
-
 
 @app.get("/users/me/items/")
 async def read_own_items(current_user: User = Depends(get_current_active_user)):
     return [{"item_id": "Foo", "owner": current_user.username}]
 
 @app.post("/create_user")
-async def create_user(new_user: User = Depends(sign_up_new_user)):
-    return new_user
-
+async def create_user(settings: Settings = Depends(get_settings), new_user: User = Depends(sign_up_new_user)):
+    if not new_user:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Username already taken",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    access_token_expires = timedelta(minutes=settings.access_token_expire_minute)
+    access_token = create_access_token(
+        data={"sub": new_user.username}, expires_delta=access_token_expires
+    )
+    return {"access_token": access_token, "token_type": "bearer"}
+    #return new_user
 
 @app.post("/create_model")
 async def create_model(new_model: Model = Depends(add_model)):
     return new_model
 
-
 @app.get("/testing_img")
 async def get_img():
     from fastapi.responses import FileResponse    
-    return FileResponse("model_serving_db/img/cat.jpeg" )
+    import zipfile
+    import os
+    import io
+    zip_filename = "testing_get_img.zip"
+    s = io.BytesIO()
+    zf = zipfile.ZipFile(s, "w")
+    for fpath in ["model_serving_db/img/cat.jpeg" , "model_serving_db/img/pikachu.png"]:
+        fdir, fname = os.path.split(fpath)
+        zf.write(fpath,fname)
+    zf.close()
+    print("supposedly zipped")
+
+    return FileResponse(zip_filename)
+#    return FileResponse("model_serving_db/img/cat.jpeg" , "model_serving_db/img/pikachu.png")
  
 @app.get("/search")
 async def get_searched_models(search: str):
@@ -91,10 +110,11 @@ async def get_model(id: int):
     return model
 
 
-
 @app.get("/info")
 async def info(settings: Settings = Depends(get_settings)):
     return settings
+
+
 
 
 
