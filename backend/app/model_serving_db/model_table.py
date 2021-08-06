@@ -1,5 +1,7 @@
 import psycopg2
+from app.config import settings
 from app.model_serving_db.creators import *
+from app.model_serving_db.schemas import Model
 #from creators import *
 
 def add_model(username: str, framework: str, name: str, version: list, size: str, device_dep: list, description: str, tags: list, input: str, output: str, test_code: str, screenshot: list):
@@ -12,11 +14,13 @@ def add_model(username: str, framework: str, name: str, version: list, size: str
     create_model_serving_db()
     create_model_table()
 
-    # Establishing the connection
-    conn = psycopg2.connect(database="model_serving_db", user="postgres", password="password", host="127.0.0.1", port="5432")
-    conn.autocommit = True
+    # connect to database and get user
+    host = settings.database_host
+    port = settings.database_port
 
-    # Creating a cursor object using the cursor() method
+    # Establishing the connection
+    conn = psycopg2.connect(database="model_serving_db", user="postgres", password="password", host=host, port=port)
+    conn.autocommit = True
     cursor = conn.cursor()
 
     result = False
@@ -64,5 +68,31 @@ def add_model(username: str, framework: str, name: str, version: list, size: str
     conn.close()
     return result
 
+
+
+
+def search_model(search :str):
+    """
+    This will give a list of models that have the same or similar name as the given search term
+    """
+
+    # Creates db and table if those don't already exist
+    create_model_serving_db()
+    create_model_table()
+
+    # connect to database and get user
+    host = settings.database_host
+    port = settings.database_port
+
+    # Establishing the connection
+    conn = psycopg2.connect(database="model_serving_db", user="postgres", password="password", host=host, port=port)
+    conn.autocommit = True
+    cursor = conn.cursor()
+    cursor.execute(f'''SELECT id, name, version, framework, tags FROM model_table WHERE LOWER(name) = LOWER('{search}');''')
+
+    searched_models = cursor.fetchall()
+    conn.close()
+
+    return searched_models 
 
 
