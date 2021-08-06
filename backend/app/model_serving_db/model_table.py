@@ -109,8 +109,6 @@ def get_model_by_id(id: int) :
 
     cursor.execute(f'''SELECT * FROM model_table WHERE id = {id};''')
     model = cursor.fetchone()
-#    print(type(model))
-#    print(model)
     result_model = None
     if model is not None:
 
@@ -175,15 +173,9 @@ def show_img_by_id(id : int):
     conn.autocommit = True
     cursor = conn.cursor()
 
-    # Creating a cursor object using the cursor() method
-    cursor = conn.cursor()
-
     # Add row with new model
     cursor.execute(f'''SELECT name, screenshot FROM model_table WHERE id = {id};''')
     pics = cursor.fetchall()[0]
-
-    #open(f"{pics[0]}.jpeg", 'wb').write(pics[1][0])
-
 
     for i in range(len(pics[1])):
         open(f"{pics[0]}_{i}.jpeg", 'wb').write(pics[1][i])
@@ -192,4 +184,25 @@ def show_img_by_id(id : int):
 
     return len(pics[1])
 
+
+def get_first_img(id: int):
+    """
+    Returns the path to the image
+    """
+    # connect to database and get user
+    host = settings.database_host
+    port = settings.database_port
+
+    # Establishing the connection
+    conn = psycopg2.connect(database="model_serving_db", user="postgres", password="password", host=host, port=port)
+    conn.autocommit = True
+    cursor = conn.cursor()
+
+    # Add row with new model
+    cursor.execute(f'''SELECT name, screenshot FROM model_table WHERE id = {id};''')
+    pics = cursor.fetchall()[0]
+
+    conn.close()
+    open(f"{pics[0]}.jpeg", 'wb').write(pics[1][0])
+    return f"{pics[0]}.jpeg"
 
