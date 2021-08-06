@@ -181,7 +181,6 @@ def show_img_by_id(id : int):
     #print(pics)
     #open(f"{pics[0]}.jpeg", 'wb').write(pics[1][0])
 
-
     for i in range(len(pics[1])):
         open(f"{pics[0]}_{i}.jpeg", 'wb').write(pics[1][i])
     conn.close()

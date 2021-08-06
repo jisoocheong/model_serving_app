@@ -90,21 +90,7 @@ async def get_model(id: int):
 
     num_imgs = show_img_by_id(id)    
 
-    return Model(
-        username=model.username,
-        framework=model.framework,
-        name=model.name,
-        version=model.version,
-        size=model.size,
-        device_dep=model.device_dep,
-        description=model.description,
-        tags=model.tags,
-        input=model.input,
-        output=model.output,
-        test_code=model.test_code
-   
-            )
-
+    return model
 @app.get("/info")
 async def info(settings: Settings = Depends(get_settings)):
     return settings
