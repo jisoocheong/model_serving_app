@@ -2,11 +2,12 @@ from datetime import timedelta
 from fastapi import Depends, FastAPI, HTTPException, status
 # from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import OAuth2PasswordRequestForm
+
 from config import Settings, get_settings
 from security import create_access_token
 from auth import sign_up_new_user, authenticate_user, get_current_active_user
 from model_serving_db.schemas import Token, User, Model
-from model_serving_db.model_table import add_model, search_model, get_model_by_id, show_img_by_id
+from model_serving_db.model_table import add_model, search_model, get_model_by_id, show_img_by_id, get_first_img
 
 
 app = FastAPI()
@@ -63,7 +64,6 @@ async def create_user(settings: Settings = Depends(get_settings), new_user: User
         data={"sub": new_user.username}, expires_delta=access_token_expires
     )
     return {"access_token": access_token, "token_type": "bearer"}
-    #return new_user
 
 @app.post("/create_model")
 async def create_model(new_model: Model = Depends(add_model)):
@@ -72,21 +72,8 @@ async def create_model(new_model: Model = Depends(add_model)):
 @app.get("/testing_img")
 async def get_img():
     from fastapi.responses import FileResponse    
-    import zipfile
-    import os
-    import io
-    zip_filename = "testing_get_img.zip"
-    s = io.BytesIO()
-    zf = zipfile.ZipFile(s, "w")
-    for fpath in ["model_serving_db/img/cat.jpeg" , "model_serving_db/img/pikachu.png"]:
-        fdir, fname = os.path.split(fpath)
-        zf.write(fpath,fname)
-    zf.close()
-    print("supposedly zipped")
+    return FileResponse("model_serving_db/img/cat.jpeg")
 
-    return FileResponse(zip_filename)
-#    return FileResponse("model_serving_db/img/cat.jpeg" , "model_serving_db/img/pikachu.png")
- 
 @app.get("/search")
 async def get_searched_models(search: str):
     """
@@ -106,15 +93,20 @@ async def get_model(id: int):
     if model is None:
         return "No model found"
 
-    num_imgs = show_img_by_id(id)    
     return model
+
+
+@app.get("/get_img")
+async def get_model_screenshot(id: int):
+    from fastapi.responses import FileResponse    
+    import base64
+    img_path = get_first_img(id)
+    return FileResponse(img_path) 
 
 
 @app.get("/info")
 async def info(settings: Settings = Depends(get_settings)):
     return settings
-
-
 
 
 
