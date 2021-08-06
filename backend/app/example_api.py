@@ -2,12 +2,14 @@ from datetime import timedelta
 from fastapi import Depends, FastAPI, HTTPException, status
 # from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import OAuth2PasswordRequestForm
+import security as security
 
 from config import Settings, get_settings
 from security import create_access_token
 from auth import sign_up_new_user, authenticate_user, get_current_active_user
 from model_serving_db.schemas import Token, User, Model
 from model_serving_db.model_table import add_model, search_model, get_model_by_id, show_img_by_id, get_first_img
+
 
 
 app = FastAPI()
@@ -75,7 +77,7 @@ async def get_img():
     return FileResponse("model_serving_db/img/cat.jpeg")
 
 @app.get("/search")
-async def get_searched_models(search: str):
+async def get_searched_models(search: str, token: str = Depends(security.oauth2_scheme)):
     """
     This will get the id, name, version, framework, and tags of the models 
     """
@@ -84,7 +86,7 @@ async def get_searched_models(search: str):
 
 
 @app.get("/get_model")
-async def get_model(id: int):
+async def get_model(id: int, token: str = Depends(security.oauth2_scheme)):
     """
     This will get the actual model with all the information that comes with it 
     """
@@ -97,7 +99,7 @@ async def get_model(id: int):
 
 
 @app.get("/get_img")
-async def get_model_screenshot(id: int):
+async def get_model_screenshot(id: int, token: str = Depends(security.oauth2_scheme)):
     from fastapi.responses import FileResponse    
     import base64
     img_path = get_first_img(id)
