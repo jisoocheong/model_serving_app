@@ -2,7 +2,7 @@ from datetime import timedelta
 from fastapi import Depends, FastAPI, HTTPException, status
 # from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import OAuth2PasswordRequestForm
-import security as security
+import security 
 
 from config import Settings, get_settings
 from security import create_access_token
