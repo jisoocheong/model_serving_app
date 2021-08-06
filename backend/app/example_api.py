@@ -7,7 +7,7 @@ from app.config import Settings, get_settings
 from app.security import create_access_token
 from app.auth import sign_up_new_user, authenticate_user, get_current_active_user
 from app.model_serving_db.schemas import Token, User, Model
-from app.model_serving_db.model_table import add_model, search_model
+from app.model_serving_db.model_table import add_model, search_model, get_model_by_id, show_img_by_id
 
 
 app = FastAPI()
@@ -66,8 +66,7 @@ async def create_model(new_model: Model = Depends(add_model)):
 @app.get("/testing_img")
 async def get_img():
     from fastapi.responses import FileResponse    
-    return FileResponse("model_serving_db/img/pikachu.png" )
-    
+    return FileResponse("model_serving_db/img/cat.jpeg" )
  
 @app.get("/search")
 async def get_searched_models(search: str):
@@ -75,20 +74,52 @@ async def get_searched_models(search: str):
     This will get the id, name, version, framework, and tags of the models 
     """
     found_models = search_model(search)
-    print(found_models)
     return {"found models" : found_models}
 
 
+
 @app.get("/get_model")
-async def get_model():
+async def get_model(id: int):
     """
     This will get the actual model with all the information that comes with it 
     """
-    pass
+    from fastapi.responses import FileResponse    
+    #return FileResponse("model_serving_db/img/cat.jpeg" )
+#    return {"data" : "some data"}
+
+    model = get_model_by_id(id)
+    if model is None:
+        return "No model found"
+    #print(model.screenshot)
+    #print(type(model.screenshot))
+    #print(type(model.screenshot[0]))
+#    return model
+    #result = f'''{model.screenshot[0]}'''
+#    print(result) 
+#    return f'''{model.screenshot[0]}'''
+
+    num_imgs = show_img_by_id(id)    
+
+   # return FileResponse("model_serving_db/img/cat.jpeg" )
 
 
+#    return "some result"
 
 
+    return Model(
+        username=model.username,
+        framework=model.framework,
+        name=model.name,
+        version=model.version,
+        size=model.size,
+        device_dep=model.device_dep,
+        description=model.description,
+        tags=model.tags,
+        input=model.input,
+        output=model.output,
+        test_code=model.test_code
+   
+            )
 
 @app.get("/info")
 async def info(settings: Settings = Depends(get_settings)):

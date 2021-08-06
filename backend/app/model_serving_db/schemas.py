@@ -34,5 +34,5 @@ class Model(BaseModel):
     input: str
     output: str
     test_code: str
-    screenshot: list
+    screenshot: Optional[list] = None
  

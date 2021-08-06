@@ -13,7 +13,7 @@ import PIL.Image as Image
 
 def show_img(name: str):
     """
-    reads blob data from the model_table
+    reads blob data of the model with the matching name from the model_table
     """
     # Creates db and table if those don't already exist
 
@@ -38,3 +38,4 @@ def show_img(name: str):
     #return image
         
 show_img("BiSeNet")
+#show_img_by_id(1)
