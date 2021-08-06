@@ -96,8 +96,7 @@ def get_model_by_id(id: int) :
     """
     Returns the model according to the given id number 
     """
-
-    
+   
     # connect to database and get user
     host = settings.database_host
     port = settings.database_port
@@ -152,17 +151,10 @@ def get_model_by_id(id: int) :
 
 """
 
-
-
-
-
 import psycopg2
 import io
 
 import PIL.Image as Image
-
-    
-
 
 def show_img_by_id(id : int):
     """
@@ -186,16 +178,12 @@ def show_img_by_id(id : int):
     cursor.execute(f'''SELECT name, screenshot FROM model_table WHERE id = {id};''')
     pics = cursor.fetchall()[0]
 
-    print(pics)
+    #print(pics)
     #open(f"{pics[0]}.jpeg", 'wb').write(pics[1][0])
 
 
     for i in range(len(pics[1])):
         open(f"{pics[0]}_{i}.jpeg", 'wb').write(pics[1][i])
-
-
-
-
     conn.close()
         
 

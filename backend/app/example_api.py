@@ -84,27 +84,11 @@ async def get_model(id: int):
     This will get the actual model with all the information that comes with it 
     """
     from fastapi.responses import FileResponse    
-    #return FileResponse("model_serving_db/img/cat.jpeg" )
-#    return {"data" : "some data"}
-
     model = get_model_by_id(id)
     if model is None:
         return "No model found"
-    #print(model.screenshot)
-    #print(type(model.screenshot))
-    #print(type(model.screenshot[0]))
-#    return model
-    #result = f'''{model.screenshot[0]}'''
-#    print(result) 
-#    return f'''{model.screenshot[0]}'''
 
     num_imgs = show_img_by_id(id)    
-
-   # return FileResponse("model_serving_db/img/cat.jpeg" )
-
-
-#    return "some result"
-
 
     return Model(
         username=model.username,
