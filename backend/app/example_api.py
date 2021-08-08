@@ -3,7 +3,6 @@ from fastapi import Depends, FastAPI, HTTPException, status
 # from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import OAuth2PasswordRequestForm
 import security 
-
 from config import Settings, get_settings
 from security import create_access_token
 from auth import sign_up_new_user, authenticate_user, get_current_active_user
@@ -68,7 +67,7 @@ async def create_user(settings: Settings = Depends(get_settings), new_user: User
     return {"access_token": access_token, "token_type": "bearer"}
 
 @app.post("/create_model")
-async def create_model(new_model: Model = Depends(add_model)):
+async def create_model(new_model: Model = Depends(add_model), token: str = Depends(security.oauth2_scheme)):
     return new_model
 
 @app.get("/testing_img")
