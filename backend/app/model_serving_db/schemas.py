@@ -1,7 +1,6 @@
 from pydantic import BaseModel
 from typing import Optional
 
-
 class Token(BaseModel):
     access_token: str
     token_type: str
@@ -35,4 +34,4 @@ class Model(BaseModel):
     output: str
     test_code: str
     screenshot: list
-    model_files: str 
+    model_files: str

@@ -64,6 +64,8 @@ def add_model(username: str, framework: str, name: str, version: str, device_dep
         zf.close()
         
         #print(type(psycopg2.Binary(open(model_file, 'rb').read())))
+        model_blob = psycopg2.Binary(open(model_file, 'rb').read())
+        #print(model_blob)
 
         # add model to the db
         cursor.execute('''SELECT id FROM model_table ORDER BY id DESC LIMIT 1;''')
@@ -73,7 +75,7 @@ def add_model(username: str, framework: str, name: str, version: str, device_dep
                 ''' version, size, device_dependency, description, tags, input, output, test_code, screenshot, model_files) ''' + \
                         f'''VALUES ({highest_id + 1}, '{username}', '{framework}', '{name}', '{version}', '{size}' ''' + \
                         f''', ARRAY{device_dep}, '{description}', ARRAY{tags}, '{input}', '{output}', ''' + \
-                        f''''{test_code}', ARRAY{blobs_str}, {psycopg2.Binary(open(model_file, 'rb').read())});''')
+                        f''''{test_code}', ARRAY{blobs_str}, {model_blob});''')
         result = True
 
 
@@ -202,4 +204,35 @@ def get_first_img(id: int):
     conn.close()
     open(f"{pics[0]}.jpeg", 'wb').write(pics[1][0])
     return f"{pics[0]}.jpeg"
+
+
+
+def remove_model(name: str, version: str):
+    """
+    Removes the model from model_table given the name and version
+    """
+
+
+    # connect to database and get user
+    host = global_config.database_host
+    port = global_config.database_port
+
+    # Establishing the connection
+    conn = psycopg2.connect(database="model_serving_db", user="postgres", password="password", host=host, port=port)
+    conn.autocommit = True
+    cursor = conn.cursor()
+    cursor.execute(f'''DELETE FROM model_table WHERE name = '{name}' AND version = '{version}';''')
+        
+    conn.close()
+
+
+
+
+
+
+
+
+
+
+
 
