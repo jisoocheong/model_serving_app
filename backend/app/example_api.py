@@ -7,7 +7,7 @@ from config import Settings, get_settings
 from security import create_access_token
 from auth import sign_up_new_user, authenticate_user, get_current_active_user
 from model_serving_db.schemas import Token, User, Model
-from model_serving_db.model_table import add_model, search_model, get_model_by_id, show_img_by_id, get_first_img
+from model_serving_db.model_table import add_model, search_model, get_model, show_img_by_id, get_first_img
 
 
 
@@ -85,12 +85,12 @@ async def get_searched_models(search: str, token: str = Depends(security.oauth2_
 
 
 @app.get("/get_model")
-async def get_model(id: int, token: str = Depends(security.oauth2_scheme)):
+async def get_model(model: Model = Depends(get_model), token: str = Depends(security.oauth2_scheme)):
     """
     This will get the actual model with all the information that comes with it 
     """
-    from fastapi.responses import FileResponse    
-    model = get_model_by_id(id)
+
+    #model = get_model(name, version)
     if model is None:
         return "No model found"
 

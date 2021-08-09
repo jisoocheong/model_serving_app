@@ -26,7 +26,7 @@ class Model(BaseModel):
     username: str
     framework: str
     name: str
-    version: list
+    version: str
     size: str
     device_dep: list
     description: str
@@ -35,4 +35,4 @@ class Model(BaseModel):
     output: str
     test_code: str
     screenshot: list
-    model_files: list
+    model_files: str 

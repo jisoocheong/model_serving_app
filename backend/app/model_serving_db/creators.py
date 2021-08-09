@@ -90,7 +90,7 @@ def create_model_table():
             '''output TEXT NOT NULL, ''' + \
             '''test_code TEXT NOT NULL, ''' + \
             '''screenshot BYTEA[] NOT NULL, ''' + \
-            '''model_files BYTEA[] NOT NULL''' + \
+            '''model_files BYTEA NOT NULL''' + \
             ''' )''')
 
 

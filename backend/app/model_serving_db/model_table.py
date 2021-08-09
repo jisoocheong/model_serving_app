@@ -4,24 +4,12 @@ from .creators import global_config, create_model_serving_db, create_model_table
 from .schemas import Model
 
 
-def add_model(username: str, framework: str, name: str, version: list, size: str, device_dep: list, description: str, tags: list, input: str, output: str, test_code: str, screenshot: list, model_files: list):
+def add_model(username: str, framework: str, name: str, version: str, device_dep: list, description: str, tags: list, input: str, output: str, test_code: str, screenshot: list, model_file: str):
     """
     Adds the given model to the model_table. 
     Note that the screenshots will be a list of the path to file of the image
     Returns true if the model is successfully added, false otherwise
     """
-
-
-    def _get_version_zip(version: str):
-        """
-        Helper method to return the path of where the version's zip file is  
-        """
-
-        for zip_file in model_files:
-            if zip_file[-len(version)-4:-4] == version:
-                return zip_file
-
-
 
 
     import zipfile
@@ -56,66 +44,57 @@ def add_model(username: str, framework: str, name: str, version: list, size: str
 
 
     # Get blobs of model_files
-    model_str = "["
-    for model_file in model_files:
-        try:
-            f = open(model_file, 'rb').read()
-            blob = psycopg2.Binary(f)
-            model_str = model_str + f"{blob},"
-        except Exception as error:
-            print(error)
-            return result 
+    model_str = ""
+    #try:
+    #    f = open(model_file, 'rb').read()
+    #    blob = psycopg2.Binary(f)
+    #    model_str = model_str + f"{blob},"
+    #except Exception as error:
+    #    print(error)
+    #    return result 
     
-    model_str = model_str[:-1] + "]"
+    model_str = model_str[:-1] 
 
 
-    for ver in version:
-        # check if name and version already exists
-        cursor.execute(f'''SELECT * FROM model_table WHERE name = '{name}' AND version = '{ver}';''')
-        existing_models = cursor.fetchall()
+    # check if name and version already exists
+    cursor.execute(f'''SELECT * FROM model_table WHERE name = '{name}' AND version = '{version}';''')
+    existing_models = cursor.fetchall()
 
-        if len(existing_models) == 0:
+    if len(existing_models) == 0:
 
-            # get size of model file for that version
+        # get size of model file
+        size = 0
+        zip_obj = zipfile.ZipFile(model_file, "r")
+        name_list = zip_obj.namelist()
+        zf = zipfile.ZipFile(model_file)
+        for content in name_list:
+            info = zf.getinfo(content)
+            size += info.file_size
 
-            size = 0
-            filename = _get_version_zip(ver)
-            if filename is None:
-                print("file for version " + ver + " was not found")
-                continue 
-            zip_obj = zipfile.ZipFile(filename, "r")
-            name_list = zip_obj.namelist()
-            zf = zipfile.ZipFile(filename)
-            for content in name_list:
-                info = zf.getinfo(content)
-                size += info.file_size
+        size = round (size/ 1000000, 4)
+        #close the file object
+        zip_obj.close()
+        zf.close()
 
-            size = round (size/ 1000000, 4)
-            #close the file object
-            zip_obj.close()
-            zf.close()
 
-            # add model to the db
-            cursor.execute('''SELECT id FROM model_table ORDER BY id DESC LIMIT 1;''')
-            highest_id = cursor.fetchone()
-            highest_id = 0 if highest_id is None else int(highest_id[0])
-            cursor.execute('''INSERT INTO model_table(id, adder_username, framework, name,''' + \
+        # add model to the db
+        cursor.execute('''SELECT id FROM model_table ORDER BY id DESC LIMIT 1;''')
+        highest_id = cursor.fetchone()
+        highest_id = 0 if highest_id is None else int(highest_id[0])
+        cursor.execute('''INSERT INTO model_table(id, adder_username, framework, name,''' + \
                 ''' version, size, device_dependency, description, tags, input, output, test_code, screenshot, model_files) ''' + \
-                        f'''VALUES ({highest_id + 1}, '{username}', '{framework}', '{name}', '{ver}', '{size}' ''' + \
+                        f'''VALUES ({highest_id + 1}, '{username}', '{framework}', '{name}', '{version}', '{size}' ''' + \
                         f''', ARRAY{device_dep}, '{description}', ARRAY{tags}, '{input}', '{output}', ''' + \
-                        f''''{test_code}', ARRAY{blobs_str}, ARRAY{model_str});''')
+                        f''''{test_code}', ARRAY{blobs_str}, {psycopg2.Binary(open(model_file, 'rb').read())});''')
+        result = True
 
 
-            result = True
-
-    
     if result:
         print("Successfully added a new model")
 
     # Close the connection
     conn.close()
     return result
-
 
 
 
@@ -140,12 +119,11 @@ def search_model(search :str):
     return searched_models 
 
 
-def get_model_by_id(id: int) :
+def get_model(name: str, version: str) :
     """
-    Returns the model according to the given id number 
+    Returns the model according to the given name and version 
     """
     import base64
-    
     # connect to database and get user
     host = global_config.database_host
     port = global_config.database_port
@@ -155,8 +133,9 @@ def get_model_by_id(id: int) :
     conn.autocommit = True
     cursor = conn.cursor()
 
-    cursor.execute(f'''SELECT * FROM model_table WHERE id = {id};''')
+    cursor.execute(f'''SELECT * FROM model_table WHERE name = '{name}' AND version = '{version}';''')
     model = cursor.fetchone()
+    print(model)
     result_model = None
     if model is not None:
 
