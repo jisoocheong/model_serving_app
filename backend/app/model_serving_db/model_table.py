@@ -62,7 +62,8 @@ def add_model(username: str, framework: str, name: str, version: str, device_dep
         #close the file object
         zip_obj.close()
         zf.close()
-
+        
+        #print(type(psycopg2.Binary(open(model_file, 'rb').read())))
 
         # add model to the db
         cursor.execute('''SELECT id FROM model_table ORDER BY id DESC LIMIT 1;''')
@@ -98,7 +99,7 @@ def search_model(search :str):
     conn = psycopg2.connect(database="model_serving_db", user="postgres", password="password", host=host, port=port)
     conn.autocommit = True
     cursor = conn.cursor()
-    cursor.execute(f'''SELECT id, name, version, framework, tags FROM model_table WHERE LOWER(name) = LOWER('{search}');''')
+    cursor.execute(f'''SELECT id, name, version, framework, tags FROM model_table WHERE LOWER(name) LIKE LOWER('{search}%');''')
 
     searched_models = cursor.fetchall()
     conn.close()
@@ -144,7 +145,7 @@ def get_model(name: str, version: str) :
         output=model[10],
         test_code=model[11],
         screenshot=base64_imgs,
-        model_files=f'{model[13]}'
+        model_files= f'{model[13]}'
             )
 
 
