@@ -43,19 +43,6 @@ def add_model(username: str, framework: str, name: str, version: str, device_dep
     blobs_str = blobs_str[:-1] + "]"
 
 
-    # Get blobs of model_files
-    model_str = ""
-    #try:
-    #    f = open(model_file, 'rb').read()
-    #    blob = psycopg2.Binary(f)
-    #    model_str = model_str + f"{blob},"
-    #except Exception as error:
-    #    print(error)
-    #    return result 
-    
-    model_str = model_str[:-1] 
-
-
     # check if name and version already exists
     cursor.execute(f'''SELECT * FROM model_table WHERE name = '{name}' AND version = '{version}';''')
     existing_models = cursor.fetchall()
@@ -157,7 +144,7 @@ def get_model(name: str, version: str) :
         output=model[10],
         test_code=model[11],
         screenshot=base64_imgs,
-        model_files=model[13]
+        model_files=f'{model[13]}'
             )
 
 
