@@ -43,6 +43,7 @@ def add_model(username: str, framework: str, name: str, version: list, size: str
                 info = zf.getinfo(content)
                 size += info.file_size
 
+        round (size/ 1000000, 4)
         #close the file object
         zip_obj.close()
         zf.close()
