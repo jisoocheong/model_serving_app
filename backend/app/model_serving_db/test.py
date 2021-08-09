@@ -1,9 +1,9 @@
 #from user_table import *
 #from model_table import *
-import psycopg2
-import io
+#import psycopg2
+#import io
 
-import PIL.Image as Image
+#import PIL.Image as Image
 
 #add_user("jisoo", "jc@nc.com", "some pass")
 #print(add_model("jisoo", "tensorflow", "stylegan2", ["anime", "toonify"], "various sizes", ['GPU'], "description", ["image generation", "face"], "latents:[None, 512] float32", "Base64 encoded RGB images: [None,] String", "some test code", ["img/cat.jpeg", "img/pikachu.png"])) 
@@ -37,5 +37,34 @@ def show_img(name: str):
     conn.close()
     #return image
         
-show_img("BiSeNet")
+#show_img("BiSeNet")
 #show_img_by_id(1)
+
+
+import zipfile
+ 
+filename="stylegan2-tf-2.x/vcs_stylegan2.zip"
+
+zip_obj= zipfile.ZipFile(filename,"r")
+ 
+print("Content of the ZIP file are: ")
+content_list=zip_obj.namelist()
+print(content_list)
+zf = zipfile.ZipFile(filename)
+info = zf.getinfo(content_list[0])
+
+
+size = info.file_size   
+print(size)
+for fname in content_list:
+    print(fname)
+ 
+#close the file object
+zip_obj.close()
+zf.close()
+
+
+
+
+
+

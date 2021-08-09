@@ -30,6 +30,26 @@ def add_model(username: str, framework: str, name: str, version: list, size: str
     highest_id = 0 if highest_id is None else int(highest_id[0])
 
 
+    # Get size of model 
+    size = "various sizes"
+    if len(model_files) == 1:
+        import zipfile
+        size = 0
+        for filename in model_files:
+            zip_obj = zipfile.ZipFile(filename, "r")
+            name_list = zip_obj.namelist()
+            zf = zipfile.ZipFile(filename)
+            for content in name_list:
+                info = zf.getinfo(content)
+                size += info.file_size
+
+        #close the file object
+        zip_obj.close()
+        zf.close()
+
+
+    print(size)
+
     # Get blobs of screenshots
     blobs_str = "["
     for img in screenshot:
