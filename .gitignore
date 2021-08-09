@@ -10,4 +10,5 @@ __pycache__
 *.swp
 *.swo
 
-
+# serving model files
+stylegan2-tf-2.x

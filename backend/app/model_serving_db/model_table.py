@@ -4,7 +4,7 @@ from .creators import global_config, create_model_serving_db, create_model_table
 from .schemas import Model
 
 
-def add_model(username: str, framework: str, name: str, version: list, size: str, device_dep: list, description: str, tags: list, input: str, output: str, test_code: str, screenshot: list):
+def add_model(username: str, framework: str, name: str, version: list, size: str, device_dep: list, description: str, tags: list, input: str, output: str, test_code: str, screenshot: list, model_files: list):
     """
     Adds the given model to the model_table. 
     Note that the screenshots will be a list of the path to file of the image
@@ -44,9 +44,24 @@ def add_model(username: str, framework: str, name: str, version: list, size: str
     blobs_str = blobs_str[:-1] + "]"
 
 
+    # Get blobs of model_files
+    model_str = "["
+    for model_file in model_files:
+        try:
+            f = open(model_file, 'rb').read()
+            blob = psycopg2.Binary(f)
+            model_str = model_str + f"{blob},"
+        except Exception as error:
+            print(error)
+            return result 
+    
+    model_str = model_str[:-1] + "]"
+
+
     cursor.execute(f'''SELECT * FROM model_table WHERE name = '{name}';''')
     existing_models = cursor.fetchall()
 
+    print(model_str)
     
     # checking versions
     for model in existing_models:
@@ -57,10 +72,10 @@ def add_model(username: str, framework: str, name: str, version: list, size: str
 
     result = True
     cursor.execute('''INSERT INTO model_table(id, adder_username, framework, name,''' + \
-                ''' version, size, device_dependency, description, tags, input, output, test_code, screenshot) ''' + \
+                ''' version, size, device_dependency, description, tags, input, output, test_code, screenshot, model_files) ''' + \
                         f'''VALUES ({highest_id + 1}, '{username}', '{framework}', '{name}', ARRAY{version}, '{size}' ''' + \
                         f''', ARRAY{device_dep}, '{description}', ARRAY{tags}, '{input}', '{output}', ''' + \
-                        f''''{test_code}', ARRAY{blobs_str});''')
+                        f''''{test_code}', ARRAY{blobs_str}, ARRAY{model_str});''')
     print("Successfully added a new model")
 
     # Close the connection
@@ -128,31 +143,13 @@ def get_model_by_id(id: int) :
         input=model[9],
         output=model[10],
         test_code=model[11],
-        screenshot=base64_imgs
+        screenshot=base64_imgs,
+        model_files=model[13]
             )
 
 
 
-#    print(result_model)
     return result_model 
-
-    """
-    return Model(
-        username=model[1],
-        framework=model[2],
-        name=model[3],
-        version=model[4],
-        size=model[5],
-        device_dep=model[6],
-        description=model[7],
-        tags=model[8],
-        input=model[9],
-        output=model[10],
-        test_code=model[11],
-        screenshot=model[12]
-            )
-
-"""
 
 
 def show_img_by_id(id : int):
