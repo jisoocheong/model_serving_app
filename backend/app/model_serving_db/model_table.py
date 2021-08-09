@@ -10,6 +10,22 @@ def add_model(username: str, framework: str, name: str, version: list, size: str
     Note that the screenshots will be a list of the path to file of the image
     Returns true if the model is successfully added, false otherwise
     """
+
+
+    def _get_version_zip(version: str):
+        """
+        Helper method to return the path of where the version's zip file is  
+        """
+
+        for zip_file in model_files:
+            if zip_file[-len(version)-4:-4] == version:
+                return zip_file
+
+
+
+
+    import zipfile
+
     # Creates db and table if those don't already exist
     create_model_serving_db()
     create_model_table()
@@ -24,33 +40,7 @@ def add_model(username: str, framework: str, name: str, version: list, size: str
     cursor = conn.cursor()
 
     result = False
-    # Add row with new model
-    cursor.execute('''SELECT id FROM model_table ORDER BY id DESC LIMIT 1;''')
-    highest_id = cursor.fetchone()
-    highest_id = 0 if highest_id is None else int(highest_id[0])
-
-
-    # Get size of model 
-    size = "various sizes"
-    if len(model_files) == 1:
-        import zipfile
-        size = 0
-        for filename in model_files:
-            zip_obj = zipfile.ZipFile(filename, "r")
-            name_list = zip_obj.namelist()
-            zf = zipfile.ZipFile(filename)
-            for content in name_list:
-                info = zf.getinfo(content)
-                size += info.file_size
-
-        round (size/ 1000000, 4)
-        #close the file object
-        zip_obj.close()
-        zf.close()
-
-
-    print(size)
-
+   
     # Get blobs of screenshots
     blobs_str = "["
     for img in screenshot:
@@ -79,25 +69,48 @@ def add_model(username: str, framework: str, name: str, version: list, size: str
     model_str = model_str[:-1] + "]"
 
 
-    cursor.execute(f'''SELECT * FROM model_table WHERE name = '{name}';''')
-    existing_models = cursor.fetchall()
+    for ver in version:
+        # check if name and version already exists
+        cursor.execute(f'''SELECT * FROM model_table WHERE name = '{name}' AND version = '{ver}';''')
+        existing_models = cursor.fetchall()
 
-    print(model_str)
-    
-    # checking versions
-    for model in existing_models:
-        model_version = model[4]
-        if set(model_version) == set(version):
-            conn.close() 
-            return result
+        if len(existing_models) == 0:
 
-    result = True
-    cursor.execute('''INSERT INTO model_table(id, adder_username, framework, name,''' + \
+            # get size of model file for that version
+
+            size = 0
+            filename = _get_version_zip(ver)
+            if filename is None:
+                print("file for version " + ver + " was not found")
+                continue 
+            zip_obj = zipfile.ZipFile(filename, "r")
+            name_list = zip_obj.namelist()
+            zf = zipfile.ZipFile(filename)
+            for content in name_list:
+                info = zf.getinfo(content)
+                size += info.file_size
+
+            size = round (size/ 1000000, 4)
+            #close the file object
+            zip_obj.close()
+            zf.close()
+
+            # add model to the db
+            cursor.execute('''SELECT id FROM model_table ORDER BY id DESC LIMIT 1;''')
+            highest_id = cursor.fetchone()
+            highest_id = 0 if highest_id is None else int(highest_id[0])
+            cursor.execute('''INSERT INTO model_table(id, adder_username, framework, name,''' + \
                 ''' version, size, device_dependency, description, tags, input, output, test_code, screenshot, model_files) ''' + \
-                        f'''VALUES ({highest_id + 1}, '{username}', '{framework}', '{name}', ARRAY{version}, '{size}' ''' + \
+                        f'''VALUES ({highest_id + 1}, '{username}', '{framework}', '{name}', '{ver}', '{size}' ''' + \
                         f''', ARRAY{device_dep}, '{description}', ARRAY{tags}, '{input}', '{output}', ''' + \
                         f''''{test_code}', ARRAY{blobs_str}, ARRAY{model_str});''')
-    print("Successfully added a new model")
+
+
+            result = True
+
+    
+    if result:
+        print("Successfully added a new model")
 
     # Close the connection
     conn.close()

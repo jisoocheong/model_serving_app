@@ -81,7 +81,7 @@ def create_model_table():
             '''adder_username TEXT NOT NULL, ''' + \
             '''framework TEXT NOT NULL, ''' + \
             '''name TEXT NOT NULL, ''' + \
-            '''version TEXT[] NOT NULL, ''' + \
+            '''version TEXT NOT NULL, ''' + \
             '''size TEXT NOT NULL, ''' + \
             '''device_dependency TEXT[] NOT NULL, ''' + \
             '''description TEXT NOT NULL, ''' + \
