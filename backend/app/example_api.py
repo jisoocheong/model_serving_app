@@ -44,14 +44,6 @@ async def login_for_access_token(
     )
     return {"access_token": access_token, "token_type": "bearer"}
 
-@app.get("/users/me/", response_model=User)
-async def read_users_me(current_user: User = Depends(get_current_active_user)):
-    return current_user
-
-@app.get("/users/me/items/")
-async def read_own_items(current_user: User = Depends(get_current_active_user)):
-    return [{"item_id": "Foo", "owner": current_user.username}]
-
 @app.post("/create_user")
 async def create_user(settings: Settings = Depends(get_settings), new_user: User = Depends(sign_up_new_user)):
     if not new_user:
@@ -69,11 +61,6 @@ async def create_user(settings: Settings = Depends(get_settings), new_user: User
 @app.post("/create_model")
 async def create_model(new_model: Model = Depends(add_model), token: str = Depends(security.oauth2_scheme)):
     return new_model
-
-@app.get("/testing_img")
-async def get_img():
-    from fastapi.responses import FileResponse    
-    return FileResponse("model_serving_db/img/cat.jpeg")
 
 @app.get("/search")
 async def get_searched_models(search: str, token: str = Depends(security.oauth2_scheme)):
@@ -103,12 +90,6 @@ async def get_model_screenshot(id: int, token: str = Depends(security.oauth2_sch
     import base64
     img_path = get_first_img(id)
     return FileResponse(img_path) 
-
-
-@app.get("/info")
-async def info(settings: Settings = Depends(get_settings)):
-    return settings
-
 
 
 
