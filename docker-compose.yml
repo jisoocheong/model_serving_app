@@ -16,7 +16,7 @@ services:
     environment: 
       POSTGRES_PASSWORD: password
     volumes: 
-      - 'jisoo_db:/var/lib/postgres/data'
+      - 'jisoo_db:/var/lib/postgresql/data'
     ports:
       - '45432:5432'
 
