@@ -7,7 +7,7 @@ from config import Settings, get_settings
 from security import create_access_token
 from auth import sign_up_new_user, authenticate_user, get_current_active_user
 from model_serving_db.schemas import Token, User, Model
-from model_serving_db.model_table import remove_model, add_model, search_model, get_model, show_img_by_id, get_first_img
+from model_serving_db.model_table import edit_model, remove_model, add_model, search_model, get_model, show_img_by_id, get_first_img
 
 
 
@@ -115,6 +115,13 @@ async def info(settings: Settings = Depends(get_settings)):
 @app.post("/remove_model")
 async def remove_model(model: Model = Depends(remove_model), token: str = Depends(security.oauth2_scheme)):
     return "Model removed"
+
+
+@app.post("/edit_model") 
+async def edit_model(model: Model = Depends(edit_model), token: str = Depends(security.oauth2_scheme)):
+    return model
+
+
 
 
 

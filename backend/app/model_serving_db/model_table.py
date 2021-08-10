@@ -150,8 +150,6 @@ def get_model(name: str, version: str) :
         model_files= f'{model[13]}'
             )
 
-
-
     return result_model 
 
 
@@ -206,13 +204,10 @@ def get_first_img(id: int):
     return f"{pics[0]}.jpeg"
 
 
-
 def remove_model(name: str, version: str):
     """
     Removes the model from model_table given the name and version
     """
-
-
     # connect to database and get user
     host = global_config.database_host
     port = global_config.database_port
@@ -226,12 +221,41 @@ def remove_model(name: str, version: str):
     conn.close()
 
 
+def edit_model(id: int, changes: dict):
+    """
+    Makes changes to model 'id'. The changes dictionary must have keys of 
+    column name and values of the new change
+    """
 
+    # connect to database and get user
+    host = global_config.database_host
+    port = global_config.database_port
 
+    # Establishing the connection
+    conn = psycopg2.connect(database="model_serving_db", user="postgres", password="password", host=host, port=port)
+    conn.autocommit = True
+    cursor = conn.cursor()
 
+    
+    cursor.execute(f'''SELECT * FROM model_table WHERE id = {id};''')
+    model = cursor.fetchone()
 
+    for col_name in changes:
+        if col_name == "model_files":
+            remove_model(model[3], model[4])
+            add_model(model[1], model[2], model[3], model[4], model[6], model[7], model[8], model[9], model[10], model[11], model[12], changes[col_name])
+        elif col_name == "screenshot":
+            remove_model(model[3], model[4])
+            add_model(model[1], model[2], model[3], model[4], model[6], model[7], model[8], model[9], model[10], model[11], changes[col_name], model[13])
 
-
+        elif type(changes[col_name]) == str:
+            cursor.execute(f'''UPDATE model_table SET {col_name} = '{changes[col_name]}' WHERE id = {id};''')
+        elif type(changes[col_name]) == list:
+            cursor.execute(f'''UPDATE model_table SET {col_name} = ARRAY{changes[col_name]} WHERE id = {id};''')
+        else:
+            cursor.execute(f'''UPDATE model_table SET {col_name} = {changes[col_name]} WHERE id = {id};''')
+     
+    conn.close()
 
 
 
