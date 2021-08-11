@@ -128,11 +128,11 @@ def get_model(name: str, version: str) :
     result_model = None
     if model is not None:
 
+        print(model[11])
         # converting screenshots to base64
         base64_imgs = []
         for img in model[12]:
             base64_imgs.append(base64.b64encode(img).decode("utf-8"))
-
         result_model = Model(
         username=model[1],
         framework=model[2],

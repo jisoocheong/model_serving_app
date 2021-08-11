@@ -32,6 +32,6 @@ class Model(BaseModel):
     tags: list
     input: str
     output: str
-    test_code: str
+    test_code: str 
     screenshot: list
     model_files: str

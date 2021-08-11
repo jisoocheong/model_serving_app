@@ -64,7 +64,6 @@ async def create_user(settings: Settings = Depends(get_settings), new_user: User
 
 @app.post("/create_model")
 async def create_model(new_model: Model = Depends(add_model)):
-#    user = get_current_active_user(token)
     return new_model
 
 @app.get("/search")
@@ -81,8 +80,6 @@ async def get_model(model: Model = Depends(get_model), token: str = Depends(secu
     """
     This will get the actual model with all the information that comes with it 
     """
-
-    #model = get_model(name, version)
     if model is None:
         return "No model found"
 
@@ -95,7 +92,6 @@ async def get_model_screenshot(id: int, token: str = Depends(security.oauth2_sch
     import base64
     img_path = get_first_img(id)
     return FileResponse(img_path) 
-
 
 
 @app.post("/remove_model")
@@ -116,8 +112,6 @@ async def get_all_users(token: str = Depends(security.oauth2_scheme)):
 @app.get("/list_models")
 async def get_all_models(token: str = Depends(security.oauth2_scheme)):
     return search_model("")
-
-
 
 
 
