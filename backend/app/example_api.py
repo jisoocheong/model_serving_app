@@ -9,6 +9,7 @@ from auth import sign_up_new_user, authenticate_user, get_current_active_user
 from model_serving_db.schemas import Token, User, Model
 from model_serving_db.model_table import edit_model, remove_model, add_model, search_model, get_model, show_img_by_id, get_first_img
 from typing import List
+from model_serving_db.user_table import all_user_info 
 
 
 app = FastAPI()
@@ -105,6 +106,9 @@ async def edit_model(model: Model = Depends(edit_model), token: str = Depends(se
     return model
 
 
+@app.get("/list_users")
+async def get_all_users(token: str = Depends(security.oauth2_scheme)):
+    return all_user_info()
 
 
 

@@ -79,3 +79,29 @@ def check_valid_login(username: str, password: str):
     else:
         print("Wrong password")
     return result
+
+
+
+def all_user_info():
+    """
+    Return all user's info except password  
+    """
+    
+    host = global_config.database_host
+    port = global_config.database_port
+    
+    # Establishing the connection
+    conn = psycopg2.connect(database="model_serving_db", user="postgres", password="password", host=host, port=port)
+    conn.autocommit = True
+
+    # Creating a cursor object using the cursor() method
+    cursor = conn.cursor()
+
+    cursor.execute(f'''SELECT username, email from user_table;''')
+    return cursor.fetchall()
+
+
+
+
+
+
