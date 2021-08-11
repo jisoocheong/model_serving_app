@@ -28,10 +28,6 @@ app = FastAPI()
 
 
 
-@app.post("/files")
-async def create_file(name: str, files: List[UploadFile] = File(None), token: str = Depends(security.oauth2_scheme)):
-    return {"filename": [file.filename for file in files]}
-
 
 @app.post("/token", response_model=Token)
 async def login_for_access_token(
