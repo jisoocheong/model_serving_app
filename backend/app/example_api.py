@@ -1,5 +1,5 @@
 from datetime import timedelta
-from fastapi import Depends, FastAPI, HTTPException, status
+from fastapi import Depends, FastAPI, HTTPException, status, File, UploadFile
 # from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import OAuth2PasswordRequestForm
 import security 
@@ -8,7 +8,7 @@ from security import create_access_token
 from auth import sign_up_new_user, authenticate_user, get_current_active_user
 from model_serving_db.schemas import Token, User, Model
 from model_serving_db.model_table import edit_model, remove_model, add_model, search_model, get_model, show_img_by_id, get_first_img
-
+from typing import List
 
 
 app = FastAPI()
@@ -25,6 +25,12 @@ app = FastAPI()
 #     allow_methods=["*"],
 #     allow_headers=["*"],
 # )
+
+
+
+@app.post("/files")
+async def create_file(name: str, files: List[UploadFile] = File(None), token: str = Depends(security.oauth2_scheme)):
+    return {"filename": [file.filename for file in files]}
 
 
 @app.post("/token", response_model=Token)

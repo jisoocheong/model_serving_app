@@ -1,19 +1,17 @@
 import psycopg2
-
+from fastapi import File, UploadFile
+from typing import List
 from .creators import global_config, create_model_serving_db, create_model_table
 from .schemas import Model
 
 
-def add_model(username: str, framework: str, name: str, version: str, device_dep: list, description: str, tags: list, input: str, output: str, test_code: str, screenshot: list, model_file: str):
+def add_model(username: str, framework: str, name: str, version: str, device_dep: list, description: str, tags: list, input: str, output: str, test_code: UploadFile = File(...), screenshot: List[UploadFile] = File(...), model_file: UploadFile = File(...)):
     """
     Adds the given model to the model_table. 
-    Note that the screenshots will be a list of the path to file of the image
     Returns true if the model is successfully added, false otherwise
     """
 
-
     import zipfile
-
     # Creates db and table if those don't already exist
     create_model_serving_db()
     create_model_table()
@@ -33,7 +31,7 @@ def add_model(username: str, framework: str, name: str, version: str, device_dep
     blobs_str = "["
     for img in screenshot:
         try:
-            drawing = open(img, 'rb').read()
+            drawing = img.file.read()
             blob = psycopg2.Binary(drawing)
             blobs_str = blobs_str + f"{blob},"
         except Exception as error:
@@ -48,24 +46,17 @@ def add_model(username: str, framework: str, name: str, version: str, device_dep
     existing_models = cursor.fetchall()
 
     if len(existing_models) == 0:
+        # model file
+        model_content = model_file.file.read()
+        size = len(model_content)
+        size = round (size/1000000, 4)
+        model_blob = psycopg2.Binary(model_content)
 
-        # get size of model file
-        size = 0
-        zip_obj = zipfile.ZipFile(model_file, "r")
-        name_list = zip_obj.namelist()
-        zf = zipfile.ZipFile(model_file)
-        for content in name_list:
-            info = zf.getinfo(content)
-            size += info.file_size
+        # test code file
+        test_code_content = test_code.file.read()
+        test_blob = psycopg2.Binary(test_code_content)
 
-        size = round (size/ 1000000, 4)
-        #close the file object
-        zip_obj.close()
-        zf.close()
-        
-        #print(type(psycopg2.Binary(open(model_file, 'rb').read())))
-        model_blob = psycopg2.Binary(open(model_file, 'rb').read())
-        #print(model_blob)
+
 
         # add model to the db
         cursor.execute('''SELECT id FROM model_table ORDER BY id DESC LIMIT 1;''')
@@ -75,7 +66,7 @@ def add_model(username: str, framework: str, name: str, version: str, device_dep
                 ''' version, size, device_dependency, description, tags, input, output, test_code, screenshot, model_files) ''' + \
                         f'''VALUES ({highest_id + 1}, '{username}', '{framework}', '{name}', '{version}', '{size}' ''' + \
                         f''', ARRAY{device_dep}, '{description}', ARRAY{tags}, '{input}', '{output}', ''' + \
-                        f''''{test_code}', ARRAY{blobs_str}, {model_blob});''')
+                        f'''{test_blob}, ARRAY{blobs_str}, {model_blob});''')
         result = True
 
 
@@ -145,7 +136,7 @@ def get_model(name: str, version: str) :
         tags=model[8],
         input=model[9],
         output=model[10],
-        test_code=model[11],
+        test_code=f'{model[11]}',
         screenshot=base64_imgs,
         model_files= f'{model[13]}'
             )

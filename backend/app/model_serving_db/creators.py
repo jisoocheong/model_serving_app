@@ -88,7 +88,7 @@ def create_model_table():
             '''tags TEXT[] NOT NULL, ''' + \
             '''input TEXT NOT NULL, ''' + \
             '''output TEXT NOT NULL, ''' + \
-            '''test_code TEXT NOT NULL, ''' + \
+            '''test_code BYTEA NOT NULL, ''' + \
             '''screenshot BYTEA[] NOT NULL, ''' + \
             '''model_files BYTEA NOT NULL''' + \
             ''' )''')
