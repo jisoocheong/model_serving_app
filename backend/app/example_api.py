@@ -65,11 +65,11 @@ async def create_model(new_model: Model = Depends(add_model), token: str = Depen
     return new_model
 
 @app.get("/search")
-async def get_searched_models(search: str, token: str = Depends(security.oauth2_scheme)):
+async def get_searched_models(model_name: str, token: str = Depends(security.oauth2_scheme)):
     """
     This will get the id, name, version, framework, and tags of the models 
     """
-    found_models = search_model(search)
+    found_models = search_model(model_name)
     return {"found models" : found_models}
 
 
