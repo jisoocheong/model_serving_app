@@ -55,6 +55,7 @@ async def create_user(settings: Settings = Depends(get_settings), new_user: User
             detail="Username already taken",
             headers={"WWW-Authenticate": "Bearer"},
         )
+
     access_token_expires = timedelta(minutes=settings.access_token_expire_minute)
     access_token = create_access_token(
         data={"sub": new_user.username}, expires_delta=access_token_expires
@@ -62,7 +63,8 @@ async def create_user(settings: Settings = Depends(get_settings), new_user: User
     return {"access_token": access_token, "token_type": "bearer"}
 
 @app.post("/create_model")
-async def create_model(new_model: Model = Depends(add_model), token: str = Depends(security.oauth2_scheme)):
+async def create_model(new_model: Model = Depends(add_model)):
+#    user = get_current_active_user(token)
     return new_model
 
 @app.get("/search")

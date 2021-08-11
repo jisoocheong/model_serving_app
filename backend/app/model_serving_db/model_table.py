@@ -1,11 +1,15 @@
 import psycopg2
-from fastapi import File, UploadFile
+from fastapi import File, UploadFile, Depends
 from typing import List
 from .creators import global_config, create_model_serving_db, create_model_table
 from .schemas import Model
+import security 
+from auth import get_current_user
+from jose import JWTError, jwt
+from config import settings as global_config
 
 
-def add_model(username: str, framework: str, name: str, version: str, device_dep: list, description: str, tags: list, input: str, output: str, test_code: UploadFile = File(...), screenshot: List[UploadFile] = File(...), model_file: UploadFile = File(...)):
+def add_model(framework: str, name: str, version: str, device_dep: list, description: str, tags: list, input: str, output: str, test_code: UploadFile = File(...), screenshot: List[UploadFile] = File(...), model_file: UploadFile = File(...), token: str = Depends(security.oauth2_scheme)):
     """
     Adds the given model to the model_table. 
     Returns true if the model is successfully added, false otherwise
@@ -40,6 +44,10 @@ def add_model(username: str, framework: str, name: str, version: str, device_dep
     
     blobs_str = blobs_str[:-1] + "]"
 
+
+    # get username
+    payload = jwt.decode(token, global_config.secret_key, algorithms=[global_config.algorithm])
+    username: str = payload.get("sub")
 
     # check if name and version already exists
     cursor.execute(f'''SELECT * FROM model_table WHERE name = '{name}' AND version = '{version}';''')
