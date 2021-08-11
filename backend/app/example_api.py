@@ -68,7 +68,7 @@ async def create_model(new_model: Model = Depends(add_model), token: str = Depen
 @app.get("/search")
 async def get_searched_models(model_name: str, token: str = Depends(security.oauth2_scheme)):
     """
-    This will get the id, name, version, framework, and tags of the models 
+    This will get the id, name, version, framework, tags, and description of the models 
     """
     found_models = search_model(model_name)
     return {"found models" : found_models}
@@ -109,6 +109,13 @@ async def edit_model(model: Model = Depends(edit_model), token: str = Depends(se
 @app.get("/list_users")
 async def get_all_users(token: str = Depends(security.oauth2_scheme)):
     return all_user_info()
+
+
+@app.get("/list_models")
+async def get_all_models(token: str = Depends(security.oauth2_scheme)):
+    return search_model("")
+
+
 
 
 

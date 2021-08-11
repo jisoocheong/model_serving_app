@@ -92,7 +92,7 @@ def search_model(search :str):
     conn = psycopg2.connect(database="model_serving_db", user="postgres", password="password", host=host, port=port)
     conn.autocommit = True
     cursor = conn.cursor()
-    cursor.execute(f'''SELECT id, name, version, framework, tags FROM model_table WHERE LOWER(name) LIKE LOWER('{search}%');''')
+    cursor.execute(f'''SELECT id, name, version, framework, tags, description FROM model_table WHERE LOWER(name) LIKE LOWER('{search}%');''')
 
     searched_models = cursor.fetchall()
     conn.close()
