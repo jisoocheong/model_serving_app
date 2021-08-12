@@ -5,11 +5,11 @@ This web app provides a platform for specific users to add, share, and edit ML m
 
 ## Usage 
 When on the FastAPI UI, to access some of the enpoints, click the lock on the top right and enter in username and password of an existing user. 
-
+<!--
 ![](./backend/app/model_serving_db/img/Screenshot from 2021-08-12 10-54-45.png)
 
 ![](./backend/app/model_serving_db/img/Screenshot from 2021-08-12 10-55-10.png)
-
+-->
 ## Code Setup
 
 1. Run the server-side FastAPI app in one terminal window:
