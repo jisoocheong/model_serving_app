@@ -18,7 +18,7 @@ This web app provides a platform for specific users to add, share, and edit ML m
 
     Navigate to [https://www.postgresql.org/download/] and select download depending on the OS
 
-[comment]: <> (3. Run the client-side React app in a different terminal window:
+<!--  3. Run the client-side React app in a different terminal window:
 
     ```sh
     $ cd frontend
@@ -26,7 +26,7 @@ This web app provides a platform for specific users to add, share, and edit ML m
     $ npm start
     ```
 
-    Navigate to [http://localhost:3000](http://localhost:3000))
+    Navigate to [http://localhost:3000](http://localhost:3000) -->
 
 
 ## Project Support and Development
