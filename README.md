@@ -38,14 +38,14 @@ The environment variables are in the 'backend/app/.env_backend' and some can be 
 
 - Checkout the 'docker-compose.yml' for detailed configuration.
 
-'''bash
+```bash
 # if it needs to be built,
 docker-compose up -d --build
 
 # if it only needs to run
 docker-compose up -d
 
-'''
+```
 This will run the container for the backend side and the database
 Access the site at 'localhost:48000/docs'.  
 
