@@ -72,6 +72,6 @@ $ docker exec -it model_serving_app_database_1 /bin/bash
 
 This project has been developed as part of my internship at the [NCSOFT](http://global.ncsoft.com/global/) Vision AI Lab in summer 2021.
 
-
+ 
 
 
